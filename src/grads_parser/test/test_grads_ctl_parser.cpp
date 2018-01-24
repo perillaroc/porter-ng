@@ -119,6 +119,10 @@ namespace {
                 boost::gregorian::date(2018, 1, 19),
                 boost::posix_time::time_duration(12, 0, 0)
         ));
+
+        EXPECT_EQ(grads_ctl.var_defs_.size(), 55);
+
+        EXPECT_EQ(grads_ctl.vars_.size(), 397);
     }
 
 }  // namespace

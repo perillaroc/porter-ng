@@ -43,6 +43,15 @@ namespace GradsParser
         Multi,
     };
 
+    class VariableDefinition
+    {
+    public:
+        std::string name_;
+        int levels_;
+        int units_;
+        std::string description_;
+    };
+
     class Variable
     {
     public:
@@ -52,6 +61,7 @@ namespace GradsParser
         size_t level_index_ = 0;
         std::string units_;
         std::string description_;
+        boost::posix_time::ptime time_;
     };
 
     class GradsCtl
@@ -68,6 +78,8 @@ namespace GradsParser
         TimeDimension t_def_;
 
         std::vector<Variable> vars_;
+
+        std::vector<VariableDefinition> var_defs_;
     };
 }
 

@@ -63,11 +63,17 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
             }
             else if(first_word == "tdef")
             {
-                parseTDimension(tokens);
+                parseTimeDimension(tokens);
+            }
+            else if(first_word == "vars")
+            {
+                parseVars(tokens);
             }
         }
         cur_line_no_++;
     }
+
+    generateVariableList();
 }
 
 void GradsCtlParser::parseDset(vector<string> &tokens) {
@@ -128,7 +134,7 @@ void GradsCtlParser::parseDimension(std::string dimension_name, std::vector<std:
     }
 }
 
-void GradsCtlParser::parseTDimension(std::vector<std::string> &tokens)
+void GradsCtlParser::parseTimeDimension(std::vector<std::string> &tokens)
 {
     if(tokens.size() != 5)
     {
@@ -184,4 +190,72 @@ void GradsCtlParser::parseTDimension(std::vector<std::string> &tokens)
 
     grads_ctl_.t_def_ = dim;
 
+}
+
+void GradsCtlParser::parseVars(std::vector<std::string> &tokens)
+{
+    assert(tokens.size() == 2);
+    int count = boost::lexical_cast<int>(tokens[1]);
+
+    vector<VariableDefinition> var_defs;
+
+    for(auto i = 0; i<count; i++)
+    {
+        cur_line_no_++;
+        string cur_line = ctl_file_lines_[cur_line_no_];
+        vector<string> var_tokens;
+        alg::split(var_tokens, cur_line, alg::is_space(), boost::token_compress_on);
+        VariableDefinition var_def;
+        var_def.name_ = var_tokens[0];
+        var_def.levels_ = boost::lexical_cast<int>(var_tokens[1]);
+        var_def.units_ = boost::lexical_cast<int>(var_tokens[2]);
+
+        vector<string> var_description_tokens{var_tokens.begin() + 3, var_tokens.end()};
+        var_def.description_ = boost::algorithm::join(var_description_tokens, " ");
+
+        var_defs.push_back(var_def);
+    }
+
+    grads_ctl_.var_defs_ = var_defs;
+}
+
+void GradsCtlParser::generateVariableList()
+{
+    vector<Variable> var_list;
+
+
+    for(auto cur_time: grads_ctl_.t_def_.values_)
+    {
+        for(auto var_def: grads_ctl_.var_defs_)
+        {
+            if(var_def.levels_ == 0)
+            {
+                Variable var;
+                var.name_ = var_def.name_;
+                var.level_type_ = LevelType::Single;
+                var.level_ = 0;
+                var.units_ = var_def.units_;
+                var.description_ = var_def.description_;
+                var.time_ = cur_time;
+                var_list.push_back(var);
+            }
+            else
+            {
+                for(auto i=0; i<var_def.levels_; i++)
+                {
+                    Variable var;
+                    var.name_ = var_def.name_;
+                    var.level_type_ = LevelType::Multi;
+                    var.level_ = grads_ctl_.z_def_.values_[i];
+                    var.level_index_ = i;
+                    var.units_ = var_def.units_;
+                    var.description_ = var_def.description_;
+                    var.time_ = cur_time;
+                    var_list.push_back(var);
+                }
+            }
+        }
+    }
+
+    grads_ctl_.vars_ = var_list;
 }
