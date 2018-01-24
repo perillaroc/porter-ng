@@ -4,8 +4,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 
+#include <sstream>
 #include <fstream>
-
 #include <iostream>
 
 using namespace GradsParser;
@@ -60,6 +60,10 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
             else if(first_word == "xdef" || first_word == "ydef" || first_word == "zdef")
             {
                 parseDimension(first_word, tokens);
+            }
+            else if(first_word == "tdef")
+            {
+                parseTDimension(tokens);
             }
         }
         cur_line_no_++;
@@ -122,4 +126,62 @@ void GradsCtlParser::parseDimension(std::string dimension_name, std::vector<std:
     {
         grads_ctl_.z_def_ = dim;
     }
+}
+
+void GradsCtlParser::parseTDimension(std::vector<std::string> &tokens)
+{
+    if(tokens.size() != 5)
+    {
+        cerr<<"Can't parse tdef:"<<ctl_file_lines_[cur_line_no_];
+        return;
+    }
+
+    auto count = boost::lexical_cast<unsigned int>(tokens[1]);
+    auto dim_type = tokens[2];
+
+    vector<boost::posix_time::ptime> times(count);
+    TimeDimension dim;
+    dim.count_ = count;
+
+    if(dim_type == "linear")
+    {
+        string start_time_token = tokens[3];
+
+        // start time format hh[:mm]zddmmmyyyy
+        auto time_facet = new boost::posix_time::time_input_facet("%Hz%d%b%Y");
+        const std::locale loc = std::locale(
+                std::locale::classic(), time_facet
+        );
+        std::istringstream is(start_time_token);
+        is.imbue(loc);
+
+        boost::posix_time::ptime cur_time;
+        is >> cur_time;
+
+        string step_token = tokens[4];
+        boost::posix_time::time_duration step_period;
+        auto increment_num = boost::lexical_cast<int>(step_token.substr(0, step_token.size()-2));
+        string increment_string = step_token.substr(step_token.size()-2, step_token.size());
+        if(increment_string == "mn")
+        {
+            step_period = boost::posix_time::minutes(increment_num);
+        }
+        else if(increment_string == "hr")
+        {
+            step_period = boost::posix_time::hours(increment_num);
+        }
+
+        for(auto i=0; i<count; i++)
+        {
+
+            times[i] = cur_time;
+            cur_time += step_period;
+        }
+        dim.values_ = times;
+
+        dim.type_ = DimensionType::Linear;
+    }
+
+    grads_ctl_.t_def_ = dim;
+
 }

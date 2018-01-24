@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 namespace GradsParser
 {
     enum class GradsDataEndian
@@ -25,6 +27,14 @@ namespace GradsParser
         DimensionType type_ = DimensionType::Unknown;
         size_t count_ = 0;
         std::vector<double> values_;
+    };
+
+    class TimeDimension
+    {
+    public:
+        DimensionType type_ = DimensionType::Unknown;
+        size_t count_ = 0;
+        std::vector<boost::posix_time::ptime> values_;
     };
 
     enum class LevelType
@@ -55,6 +65,7 @@ namespace GradsParser
         Dimension x_def_;
         Dimension y_def_;
         Dimension z_def_;
+        TimeDimension t_def_;
 
         std::vector<Variable> vars_;
     };

@@ -14,6 +14,8 @@ namespace GradsParser {
 
         void parseDimension(std::string dimension_name, std::vector<std::string> &tokens);
 
+        void parseTDimension(std::vector<std::string> &tokens);
+
         std::string ctl_file_path_;
         std::vector<std::string> ctl_file_lines_;
         int cur_line_no_;

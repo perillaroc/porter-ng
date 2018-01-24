@@ -111,11 +111,14 @@ namespace {
             EXPECT_DOUBLE_EQ(z_level_values[i], z_level_expected_values[i]);
         }
 
-
-    }
-
-    TEST_F(GradsCtlParser, MethodHelloWorld) {
-        EXPECT_EQ(0, 0);
+        EXPECT_EQ(grads_ctl.t_def_.count_, 1);
+        EXPECT_EQ(grads_ctl.t_def_.type_, GradsParser::DimensionType::Linear);
+        auto t_values = grads_ctl.t_def_.values_;
+        EXPECT_EQ(t_values.size(), 1);
+        EXPECT_EQ(t_values[0], boost::posix_time::ptime(
+                boost::gregorian::date(2018, 1, 19),
+                boost::posix_time::time_duration(12, 0, 0)
+        ));
     }
 
 }  // namespace
