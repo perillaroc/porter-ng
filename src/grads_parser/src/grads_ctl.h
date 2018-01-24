@@ -48,7 +48,7 @@ namespace GradsParser
     public:
         std::string name_;
         int levels_;
-        int units_;
+        std::string units_;
         std::string description_;
     };
 

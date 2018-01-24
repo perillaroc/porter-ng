@@ -208,7 +208,7 @@ void GradsCtlParser::parseVars(std::vector<std::string> &tokens)
         VariableDefinition var_def;
         var_def.name_ = var_tokens[0];
         var_def.levels_ = boost::lexical_cast<int>(var_tokens[1]);
-        var_def.units_ = boost::lexical_cast<int>(var_tokens[2]);
+        var_def.units_ = var_tokens[2];
 
         vector<string> var_description_tokens{var_tokens.begin() + 3, var_tokens.end()};
         var_def.description_ = boost::algorithm::join(var_description_tokens, " ");

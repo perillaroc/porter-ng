@@ -50,6 +50,7 @@ namespace {
         EXPECT_EQ(grads_ctl.title_, "post output from grapes");
         EXPECT_DOUBLE_EQ(grads_ctl.undefined_value_, -9999.0);
 
+        // x def
         EXPECT_EQ(grads_ctl.x_def_.count_, 1440);
         EXPECT_EQ(grads_ctl.x_def_.type_, GradsParser::DimensionType::Linear);
         auto x_level_values = grads_ctl.x_def_.values_;
@@ -61,6 +62,7 @@ namespace {
             x_level += x_step;
         }
 
+        // y def
         EXPECT_EQ(grads_ctl.y_def_.count_, 720);
         EXPECT_EQ(grads_ctl.y_def_.type_, GradsParser::DimensionType::Linear);
         auto y_level_values = grads_ctl.y_def_.values_;
@@ -72,6 +74,7 @@ namespace {
             y_level += y_step;
         }
 
+        // z def
         EXPECT_EQ(grads_ctl.z_def_.count_, 29);
         EXPECT_EQ(grads_ctl.z_def_.type_, GradsParser::DimensionType::Level);
         auto z_level_values = grads_ctl.z_def_.values_;
@@ -111,6 +114,7 @@ namespace {
             EXPECT_DOUBLE_EQ(z_level_values[i], z_level_expected_values[i]);
         }
 
+        // t def
         EXPECT_EQ(grads_ctl.t_def_.count_, 1);
         EXPECT_EQ(grads_ctl.t_def_.type_, GradsParser::DimensionType::Linear);
         auto t_values = grads_ctl.t_def_.values_;
@@ -120,9 +124,18 @@ namespace {
                 boost::posix_time::time_duration(12, 0, 0)
         ));
 
+        // variables
         EXPECT_EQ(grads_ctl.var_defs_.size(), 55);
-
         EXPECT_EQ(grads_ctl.vars_.size(), 397);
+        GradsParser::Variable var = grads_ctl.vars_[0];
+        EXPECT_EQ(var.name_, "u");
+        EXPECT_DOUBLE_EQ(var.level_, 1000.0);
+        EXPECT_EQ(var.description_, "u_wind");
+        EXPECT_EQ(var.units_, "0");
+        EXPECT_EQ(var.time_, boost::posix_time::ptime(
+                boost::gregorian::date(2018, 1, 19),
+                boost::posix_time::time_duration(12, 0, 0)
+        ));
     }
 
 }  // namespace
