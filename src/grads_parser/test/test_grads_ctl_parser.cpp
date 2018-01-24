@@ -39,7 +39,7 @@ namespace {
         // Objects declared here can be used by all tests in the test case for Foo.
     };
 
-    TEST_F(GradsCtlParser, MethodInit) {
+    TEST_F(GradsCtlParser, MethodParse) {
         const string test_ctl_file_path = "src/grads_parser/test/test_data/post.ctl_2018011912_000";
         GradsParser::GradsCtlParser parser;
         parser.parse(test_ctl_file_path);
@@ -52,12 +52,64 @@ namespace {
 
         EXPECT_EQ(grads_ctl.x_def_.count_, 1440);
         EXPECT_EQ(grads_ctl.x_def_.type_, GradsParser::DimensionType::Linear);
+        auto x_level_values = grads_ctl.x_def_.values_;
+        double x_level = 0.0;
+        double x_step = 0.25;
+        for(auto i=0; i<grads_ctl.x_def_.count_; i++)
+        {
+            EXPECT_DOUBLE_EQ(x_level_values[i], x_level);
+            x_level += x_step;
+        }
 
         EXPECT_EQ(grads_ctl.y_def_.count_, 720);
         EXPECT_EQ(grads_ctl.y_def_.type_, GradsParser::DimensionType::Linear);
+        auto y_level_values = grads_ctl.y_def_.values_;
+        double y_level = -89.875;
+        double y_step = 0.25;
+        for(auto i=0; i<grads_ctl.y_def_.count_; i++)
+        {
+            EXPECT_DOUBLE_EQ(y_level_values[i], y_level);
+            y_level += y_step;
+        }
 
         EXPECT_EQ(grads_ctl.z_def_.count_, 29);
         EXPECT_EQ(grads_ctl.z_def_.type_, GradsParser::DimensionType::Level);
+        auto z_level_values = grads_ctl.z_def_.values_;
+        vector<double> z_level_expected_values = {
+                1000.000000,
+                962.5000000,
+                925.0000000,
+                887.5000000,
+                850.0000000,
+                800.0000000,
+                750.0000000,
+                700.0000000,
+                650.0000000,
+                600.0000000,
+                550.0000000,
+                500.0000000,
+                450.0000000,
+                400.0000000,
+                350.0000000,
+                300.0000000,
+                275.0000000,
+                250.0000000,
+                225.0000000,
+                200.0000000,
+                175.0000000,
+                150.0000000,
+                125.0000000,
+                100.0000000,
+                70.00000000,
+                50.00000000,
+                30.00000000,
+                20.00000000,
+                10.00000000
+        };
+        for(auto i=0; i<29; i++)
+        {
+            EXPECT_DOUBLE_EQ(z_level_values[i], z_level_expected_values[i]);
+        }
 
 
     }

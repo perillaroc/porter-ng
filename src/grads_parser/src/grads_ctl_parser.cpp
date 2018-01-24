@@ -49,7 +49,7 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
             }
             else if(first_word == "title")
             {
-                string title = alg::trim_copy(cur_line);
+                string title = alg::trim_copy(cur_line.substr(first_word.length()));
                 grads_ctl_.title_ = title;
             }
             else if(first_word == "undef")
