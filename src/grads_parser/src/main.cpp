@@ -1,8 +1,3 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
-
 #include "grads_ctl_parser.h"
 
 using namespace GradsParser;
@@ -21,7 +16,7 @@ int main(int argc, char** argv)
     GradsCtlParser parser;
     parser.parse(ctl_file_path);
 
-    GradsCtl grads_ctl = parser.grads_ctl_;
+    GradsCtl grads_ctl = parser.getGradsCtl();
 
 //    for(const auto &line: parser.ctl_file_lines_)
 //    {

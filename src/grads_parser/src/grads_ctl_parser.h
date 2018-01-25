@@ -10,6 +10,11 @@ namespace GradsParser {
 
         void parse(const std::string &ctl_file_path);
 
+        GradsCtl getGradsCtl() const
+        {
+            return grads_ctl_;
+        }
+
     private:
 
         void parseDset(std::vector<std::string> &tokens);
@@ -22,12 +27,11 @@ namespace GradsParser {
 
         void generateVariableList();
 
-    public:
         std::string ctl_file_path_;
-        std::vector<std::string> ctl_file_lines_;
-        int cur_line_no_;
 
         GradsCtl grads_ctl_;
+        std::vector<std::string> ctl_file_lines_;
+        int cur_line_no_;
     };
 
 }

@@ -50,7 +50,7 @@ namespace {
     {
         GradsParser::GradsCtlParser parser;
         parser.parse(test_ctl_file_path_);
-        GradsParser::GradsCtl grads_ctl = parser.grads_ctl_;
+        GradsParser::GradsCtl grads_ctl = parser.getGradsCtl();
         grads_ctl.data_endian_ = GradsParser::DataEndian::BigEndian;
 
         GradsParser::GradsDataHandler handler{grads_ctl};

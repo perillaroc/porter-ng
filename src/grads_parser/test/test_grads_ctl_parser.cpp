@@ -44,7 +44,7 @@ namespace {
     TEST_F(GradsCtlParser, MethodParse) {
         GradsParser::GradsCtlParser parser;
         parser.parse(test_ctl_file_path_);
-        GradsParser::GradsCtl grads_ctl = parser.grads_ctl_;
+        GradsParser::GradsCtl grads_ctl = parser.getGradsCtl();
 
 
         EXPECT_EQ(grads_ctl.data_file_path_, "src/grads_parser/test/test_data/postvar2018011912_000");
