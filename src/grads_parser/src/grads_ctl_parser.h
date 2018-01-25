@@ -18,7 +18,7 @@ namespace GradsParser {
 
         void parseTimeDimension(std::vector<std::string> &tokens);
 
-        void parseVars(std::vector<std::string> &tokens);
+        void parseVariableDefs(std::vector<std::string> &tokens);
 
         void generateVariableList();
 

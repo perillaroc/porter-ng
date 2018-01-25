@@ -42,7 +42,7 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
         if(!tokens.empty())
         {
             string first_word = tokens[0];
-            cout<<first_word<<endl;
+            // cout<<first_word<<endl;
             if(first_word == "dset")
             {
                 parseDset(tokens);
@@ -67,7 +67,7 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
             }
             else if(first_word == "vars")
             {
-                parseVars(tokens);
+                parseVariableDefs(tokens);
             }
         }
         cur_line_no_++;
@@ -192,7 +192,7 @@ void GradsCtlParser::parseTimeDimension(std::vector<std::string> &tokens)
 
 }
 
-void GradsCtlParser::parseVars(std::vector<std::string> &tokens)
+void GradsCtlParser::parseVariableDefs(std::vector<std::string> &tokens)
 {
     assert(tokens.size() == 2);
     int count = boost::lexical_cast<int>(tokens[1]);
@@ -222,7 +222,6 @@ void GradsCtlParser::parseVars(std::vector<std::string> &tokens)
 void GradsCtlParser::generateVariableList()
 {
     vector<Variable> var_list;
-
 
     for(auto cur_time: grads_ctl_.t_def_.values_)
     {

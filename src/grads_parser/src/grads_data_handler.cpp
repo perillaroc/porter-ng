@@ -25,22 +25,31 @@ float reverseFloat(const float inFloat)
 
 GradsDataHandler::GradsDataHandler(GradsCtl &grads_ctl):
         grads_ctl_{grads_ctl},
-        current_variable_index_{0}
+        next_variable_index_{0}
 {
 
+}
+
+
+GradsDataHandler::~GradsDataHandler()
+{
+    if(data_file_stream_.is_open())
+    {
+        data_file_stream_.close();
+    }
 }
 
 void GradsDataHandler::openDataFile()
 {
     data_file_stream_.open(grads_ctl_.data_file_path_, ios::in | ios::binary);
-    current_variable_index_ = 0;
+    next_variable_index_ = 0;
 }
 
 vector<float> GradsDataHandler::loadNext()
 {
     current_variable_values_.clear();
 
-    auto cur_var = grads_ctl_.vars_[current_variable_index_];
+    auto cur_var = grads_ctl_.vars_[next_variable_index_];
     auto x_def = grads_ctl_.x_def_;
     auto y_def = grads_ctl_.y_def_;
 
@@ -79,8 +88,6 @@ vector<float> GradsDataHandler::loadNext()
 
     current_variable_values_ = real_values;
 
-    current_variable_index_++;
+    next_variable_index_++;
     return current_variable_values_;
 }
-
-

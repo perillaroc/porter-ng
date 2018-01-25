@@ -9,7 +9,7 @@
 
 namespace GradsParser
 {
-    enum class GradsDataEndian
+    enum class DataEndian
     {
         Unknown,
         BigEndian,
@@ -23,17 +23,15 @@ namespace GradsParser
         Level
     };
 
-    class Dimension
+    struct Dimension
     {
-    public:
         DimensionType type_ = DimensionType::Unknown;
         size_t count_ = 0;
         std::vector<double> values_;
     };
 
-    class TimeDimension
+    struct TimeDimension
     {
-    public:
         DimensionType type_ = DimensionType::Unknown;
         size_t count_ = 0;
         std::vector<boost::posix_time::ptime> values_;
@@ -54,9 +52,8 @@ namespace GradsParser
         std::string description_;
     };
 
-    class Variable
+    struct Variable
     {
-    public:
         std::string name_;
         LevelType level_type_ = LevelType::Multi;
         double level_ = -1;
@@ -66,22 +63,21 @@ namespace GradsParser
         boost::posix_time::ptime time_;
     };
 
-    class GradsCtl
+    struct GradsCtl
     {
-    public:
         std::string data_file_path_;
         std::string title_;
         double undefined_value_ = 9999;
 
 #if defined(PORTER_BIG_ENDIAN)
-        GradsDataEndian data_endian_ = GradsDataEndian::BigEndian;
-        GradsDataEndian local_endian_ = GradsDataEndian::BigEndian;
+        DataEndian data_endian_ = DataEndian::BigEndian;
+        DataEndian local_endian_ = DataEndian::BigEndian;
 #elif defined(PORTER_LITTLE_ENDIAN)
-        GradsDataEndian data_endian_ = GradsDataEndian::LittleEndian;
-        GradsDataEndian local_endian_ = GradsDataEndian::LittleEndian;
+        DataEndian data_endian_ = DataEndian::LittleEndian;
+        DataEndian local_endian_ = DataEndian::LittleEndian;
 #else
-        GradsDataEndian data_endian_ = GradsDataEndian::Unknown;
-        GradsDataEndian local_endian_ = GradsDataEndian::Unknown;
+        DataEndian data_endian_ = DataEndian::Unknown;
+        DataEndian local_endian_ = DataEndian::Unknown;
 #endif
 
         Dimension x_def_;
@@ -89,9 +85,10 @@ namespace GradsParser
         Dimension z_def_;
         TimeDimension t_def_;
 
-        std::vector<Variable> vars_;
 
         std::vector<VariableDefinition> var_defs_;
+        std::vector<Variable> vars_;
+
     };
 }
 

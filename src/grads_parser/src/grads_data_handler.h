@@ -10,11 +10,13 @@ namespace GradsParser {
     public:
         explicit GradsDataHandler(GradsCtl &grads_ctl);
 
+        ~GradsDataHandler();
+
         void openDataFile();
 
         bool hasNext() const
         {
-            return current_variable_index_ < grads_ctl_.vars_.size();
+            return next_variable_index_ < grads_ctl_.vars_.size();
         }
         std::vector<float> loadNext();
 
@@ -23,8 +25,7 @@ namespace GradsParser {
         std::vector<float> current_variable_values_;
 
         std::ifstream data_file_stream_;
-        int current_variable_index_;
+        int next_variable_index_;
     };
-
 
 }

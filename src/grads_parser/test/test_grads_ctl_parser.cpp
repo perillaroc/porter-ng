@@ -139,9 +139,9 @@ namespace {
         ));
 
 #ifdef PORTER_LITTLE_ENDIAN
-        GradsParser::GradsDataEndian local_endian = GradsParser::GradsDataEndian::LittleEndian;
+        GradsParser::DataEndian local_endian = GradsParser::DataEndian::LittleEndian;
 #else
-        GradsParser::GradsDataEndian local_endian = GradsParser::GradsDataEndian::BigEndian;
+        GradsParser::DataEndian local_endian = GradsParser::DataEndian::BigEndian;
 #endif
         EXPECT_EQ(grads_ctl.local_endian_, local_endian);
         EXPECT_EQ(grads_ctl.data_endian_, local_endian);
