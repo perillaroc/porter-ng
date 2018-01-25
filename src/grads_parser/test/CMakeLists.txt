@@ -1,7 +1,9 @@
 include_directories(../src)
 
 add_executable(test_grads_ctl_parser test_grads_ctl_parser.cpp)
-
 target_link_libraries(test_grads_ctl_parser grads_parser_lib ${GTEST_BOTH_LIBRARIES} pthread)
+add_test(GradsCtlParserTest test_grads_ctl_parser)
 
-add_test(ParserTest test_grads_ctl_parser)
+add_executable(test_grads_data_handler test_grads_data_handler.cpp)
+target_link_libraries(test_grads_data_handler grads_parser_lib ${GTEST_BOTH_LIBRARIES} pthread)
+add_test(GradsDataHandlerTest test_grads_data_handler)
