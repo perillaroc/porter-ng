@@ -60,8 +60,14 @@ namespace {
         while(handler.hasNext())
         {
             cout<<"Loading variable "<<current_index<<"/"<<grads_ctl.vars_.size()<<endl;
-            vector<float> values = handler.loadNext();
+            GradsParser::GradsRecordHandler *record_handler = handler.loadNext();
+
+            const vector<float> values = record_handler->values();
+
             EXPECT_EQ(values.size(), 1036800);
+
+            delete record_handler;
+
             current_index++;
         }
     }
