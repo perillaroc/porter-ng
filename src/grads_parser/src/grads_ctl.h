@@ -5,6 +5,8 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include "porter_config.h"
+
 namespace GradsParser
 {
     enum class GradsDataEndian
@@ -70,7 +72,17 @@ namespace GradsParser
         std::string data_file_path_;
         std::string title_;
         double undefined_value_ = 9999;
+
+#if defined(PORTER_BIG_ENDIAN)
+        GradsDataEndian data_endian_ = GradsDataEndian::BigEndian;
+        GradsDataEndian local_endian_ = GradsDataEndian::BigEndian;
+#elif defined(PORTER_LITTLE_ENDIAN)
+        GradsDataEndian data_endian_ = GradsDataEndian::LittleEndian;
+        GradsDataEndian local_endian_ = GradsDataEndian::LittleEndian;
+#else
         GradsDataEndian data_endian_ = GradsDataEndian::Unknown;
+        GradsDataEndian local_endian_ = GradsDataEndian::Unknown;
+#endif
 
         Dimension x_def_;
         Dimension y_def_;

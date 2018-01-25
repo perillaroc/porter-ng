@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include "grads_ctl_parser.h"
 
@@ -29,6 +29,7 @@ namespace {
         virtual void SetUp() {
             // Code here will be called immediately after the constructor (right
             // before each test).
+            test_ctl_file_path_ = "src/grads_parser/test/test_data/post.ctl_2018011912_000";
         }
 
         virtual void TearDown() {
@@ -37,12 +38,12 @@ namespace {
         }
 
         // Objects declared here can be used by all tests in the test case for Foo.
+        string test_ctl_file_path_;
     };
 
     TEST_F(GradsCtlParser, MethodParse) {
-        const string test_ctl_file_path = "src/grads_parser/test/test_data/post.ctl_2018011912_000";
         GradsParser::GradsCtlParser parser;
-        parser.parse(test_ctl_file_path);
+        parser.parse(test_ctl_file_path_);
         GradsParser::GradsCtl grads_ctl = parser.grads_ctl_;
 
 
@@ -136,6 +137,14 @@ namespace {
                 boost::gregorian::date(2018, 1, 19),
                 boost::posix_time::time_duration(12, 0, 0)
         ));
+
+#ifdef PORTER_LITTLE_ENDIAN
+        GradsParser::GradsDataEndian local_endian = GradsParser::GradsDataEndian::LittleEndian;
+#else
+        GradsParser::GradsDataEndian local_endian = GradsParser::GradsDataEndian::BigEndian;
+#endif
+        EXPECT_EQ(grads_ctl.local_endian_, local_endian);
+        EXPECT_EQ(grads_ctl.data_endian_, local_endian);
     }
 
 }  // namespace

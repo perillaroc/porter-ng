@@ -1,0 +1,4 @@
+#pragma once
+
+#cmakedefine PORTER_BIG_ENDIAN @PORTER_BIG_ENDIAN@
+#cmakedefine PORTER_LITTLE_ENDIAN @PORTER_LITTLE_ENDIAN@
