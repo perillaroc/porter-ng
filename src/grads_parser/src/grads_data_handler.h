@@ -23,6 +23,8 @@ namespace GradsParser {
 
         std::shared_ptr<GradsRecordHandler> loadNext();
 
+        std::shared_ptr<GradsRecordHandler> loadByIndex(int index);
+
     private:
         GradsCtl grads_ctl_;
 

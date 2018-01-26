@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <chrono>
 
 #include <gtest/gtest.h>
 
@@ -7,21 +8,22 @@
 #include "grads_data_handler.h"
 
 using namespace std;
+using namespace std::chrono;
 
 namespace {
 
 // The fixture for testing class Foo.
-    class GradsDataHandlerTest : public ::testing::Test {
+    class GradsDataHandlerFullDataTest : public ::testing::Test {
     protected:
         // You can remove any or all of the following functions if its body
         // is empty.
 
-        GradsDataHandlerTest()
+        GradsDataHandlerFullDataTest()
         {
             // You can do set-up work for each test here.
         }
 
-        virtual ~GradsDataHandlerTest()
+        virtual ~GradsDataHandlerFullDataTest()
         {
             // You can do clean-up work that doesn't throw exceptions here.
         }
@@ -46,7 +48,7 @@ namespace {
         string test_ctl_file_path_;
     };
 
-    TEST_F(GradsDataHandlerTest, MethodLoadByIndex)
+    TEST_F(GradsDataHandlerFullDataTest, MethodLoadNext)
     {
         GradsParser::GradsCtlParser parser;
         parser.parse(test_ctl_file_path_);
@@ -56,20 +58,25 @@ namespace {
         GradsParser::GradsDataHandler handler{grads_ctl};
         handler.openDataFile();
 
-        int index = 29;
-        auto record_handler = handler.loadByIndex(index);
+        int current_index = 1;
+        while(handler.hasNext())
+        {
+            cout<<"Loading variable "<<current_index<<"/"<<grads_ctl.vars_.size()<<"...";
 
-        auto variable = record_handler->variable();
-        EXPECT_EQ(variable.name_, "v");
-        EXPECT_DOUBLE_EQ(variable.level_, 1000.0);
+            high_resolution_clock::time_point start_time = high_resolution_clock::now();
+            auto record_handler = handler.loadNext();
+            high_resolution_clock::time_point end_time = high_resolution_clock::now();
 
-        index=60;
-        record_handler = handler.loadByIndex(index);
+            cout<<duration_cast<milliseconds>(end_time-start_time).count()<<" ms"<<endl;
 
-        variable = record_handler->variable();
-        EXPECT_EQ(variable.name_, "t");
-        EXPECT_DOUBLE_EQ(variable.level_, 925.0);
+            auto values = record_handler->values();
 
+            EXPECT_EQ(values.size(), 1036800);
+
+            record_handler.reset();
+
+            current_index++;
+        }
     }
 
 }  // namespace

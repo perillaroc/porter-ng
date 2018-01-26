@@ -15,6 +15,11 @@ namespace GradsParser {
             variable_ = variable;
         }
 
+        Variable& variable()
+        {
+            return variable_;
+        }
+
         void loadValues();
 
         const std::vector<float>& values()

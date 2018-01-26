@@ -7,3 +7,7 @@ add_test(GradsCtlParserTest test_grads_ctl_parser)
 add_executable(test_grads_data_handler test_grads_data_handler.cpp)
 target_link_libraries(test_grads_data_handler grads_parser_lib ${GTEST_BOTH_LIBRARIES} pthread)
 add_test(GradsDataHandlerTest test_grads_data_handler)
+
+add_executable(test_grads_data_handler_full_data test_grads_data_handler_full_data.cpp)
+target_link_libraries(test_grads_data_handler_full_data grads_parser_lib ${GTEST_BOTH_LIBRARIES} pthread)
+add_test(GradsDataHandlerFullDataTest test_grads_data_handler_full_data)
