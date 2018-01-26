@@ -70,6 +70,11 @@ namespace {
         EXPECT_EQ(variable.name_, "t");
         EXPECT_DOUBLE_EQ(variable.level_, 925.0);
 
+        // non-exists index
+        index=6000;
+        record_handler = handler.loadByIndex(index);
+
+        EXPECT_EQ(record_handler.get(), nullptr);
     }
 
 }  // namespace

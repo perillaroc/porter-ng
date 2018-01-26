@@ -57,6 +57,22 @@ namespace {
         );
         EXPECT_EQ(index, 356);
 
+        // non-exists variable
+        index = GradsParser::GradsUtil::findVariableIndex(
+                grads_ctl, "t", GradsParser::LevelType::Single, 1000.0
+        );
+        EXPECT_EQ(index, -1);
+
+        index = GradsParser::GradsUtil::findVariableIndex(
+                grads_ctl, "no", GradsParser::LevelType::Multi, 1000.0
+        );
+        EXPECT_EQ(index, -1);
+
+        index = GradsParser::GradsUtil::findVariableIndex(
+                grads_ctl, "t", GradsParser::LevelType::Multi, 951.0
+        );
+        EXPECT_EQ(index, -1);
+
     }
 
 }
