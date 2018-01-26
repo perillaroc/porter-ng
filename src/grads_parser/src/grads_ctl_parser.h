@@ -10,7 +10,7 @@ namespace GradsParser {
 
         void parse(const std::string &ctl_file_path);
 
-        GradsCtl getGradsCtl() const
+        GradsCtl& getGradsCtl()
         {
             return grads_ctl_;
         }
@@ -25,7 +25,11 @@ namespace GradsParser {
 
         void parseVariableDefs(std::vector<std::string> &tokens);
 
+        void parseFileName();
+
         void generateVariableList();
+
+        void generateTimeForGrapes(const std::string &start_hour_string, const std::string &forecast_hour_string);
 
         std::string ctl_file_path_;
 

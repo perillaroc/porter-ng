@@ -65,6 +65,7 @@ namespace GradsParser
 
     struct GradsCtl
     {
+        std::string ctl_file_path_;
         std::string data_file_path_;
         std::string title_;
         double undefined_value_ = 9999;
@@ -88,6 +89,10 @@ namespace GradsParser
 
         std::vector<VariableDefinition> var_defs_;
         std::vector<Variable> vars_;
+
+        // special vars
+        boost::posix_time::ptime start_time_;
+        boost::posix_time::time_duration forecast_time_;
 
     };
 }

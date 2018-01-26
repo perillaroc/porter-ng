@@ -7,6 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <regex>
 
 using namespace GradsParser;
 using namespace std;
@@ -21,6 +22,7 @@ GradsCtlParser::GradsCtlParser():
 
 void GradsCtlParser::parse(const std::string &ctl_file_path) {
     ctl_file_path_ = ctl_file_path;
+    grads_ctl_.ctl_file_path_ = ctl_file_path_;
 
     ctl_file_lines_.clear();
     ifstream ctl_file(ctl_file_path_);
@@ -74,6 +76,8 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
     }
 
     generateVariableList();
+
+    parseFileName();
 }
 
 void GradsCtlParser::parseDset(vector<string> &tokens) {
@@ -257,4 +261,82 @@ void GradsCtlParser::generateVariableList()
     }
 
     grads_ctl_.vars_ = var_list;
+}
+
+void GradsCtlParser::parseFileName()
+{
+    {
+        // model: GRAPES GFS
+        // data: postvar
+        regex expression{"post.ctl_(\\d{10})_(\\d{3})"};
+        smatch sm;
+        if (std::regex_search(ctl_file_path_, sm, expression)) {
+            int count = sm.size();
+            string start_hour_string = sm[1];
+            string forecast_hour_string = sm[2];
+
+            generateTimeForGrapes(start_hour_string, forecast_hour_string);
+            return;
+        }
+    }
+
+    {
+        // model: GRAPES GFS
+        // data: modelvar
+        regex expression{"model.ctl_(\\d{10})_(\\d{3})"};
+        smatch sm;
+        if (std::regex_search(ctl_file_path_, sm, expression)) {
+            int count = sm.size();
+            string start_hour_string = sm[1];
+            string forecast_hour_string = sm[2];
+
+            generateTimeForGrapes(start_hour_string, forecast_hour_string);
+            return;
+        }
+    }
+
+    {
+        // model: GRAPES MESO
+        // data: postvar
+        regex expression{"post.ctl_(\\d{15})"};
+        smatch sm;
+        if (std::regex_search(ctl_file_path_, sm, expression)) {
+            int count = sm.size();
+            string time_string = sm[1];
+
+            generateTimeForGrapes(time_string.substr(0, 10), time_string.substr(10, 3));
+            return;
+        }
+    }
+
+    {
+        // model: GRAPES MESO
+        // data: modelvar
+        regex expression{"model.ctl_(\\d{15})"};
+        smatch sm;
+        if (std::regex_search(ctl_file_path_, sm, expression)) {
+            int count = sm.size();
+            string time_string = sm[1];
+
+            generateTimeForGrapes(time_string.substr(0, 10), time_string.substr(10, 3));
+            return;
+        }
+    }
+}
+
+void GradsCtlParser::generateTimeForGrapes(
+        const std::string &start_hour_string,
+        const std::string &forecast_hour_string)
+{
+    auto year = boost::lexical_cast<int>(start_hour_string.substr(0, 4));
+    auto month = boost::lexical_cast<int>(start_hour_string.substr(4, 2));
+    auto day = boost::lexical_cast<int>(start_hour_string.substr(6, 2));
+    auto hour = boost::lexical_cast<int>(start_hour_string.substr(8));
+    grads_ctl_.start_time_ = boost::posix_time::ptime(
+            boost::gregorian::date(year, month, day),
+            boost::posix_time::time_duration(hour, 0, 0)
+    );
+
+    auto forecast_hour = boost::lexical_cast<int>(forecast_hour_string);
+    grads_ctl_.forecast_time_ = boost::posix_time::hours(forecast_hour);
 }

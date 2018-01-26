@@ -147,6 +147,28 @@ namespace {
         EXPECT_EQ(grads_ctl.data_endian_, local_endian);
     }
 
+    TEST_F(GradsCtlParser, MethodParseFileName)
+    {
+        GradsParser::GradsCtlParser parser;
+        parser.parse("src/grads_parser/test/test_data/post.ctl_2018011912_000");
+        auto grads_ctl = parser.getGradsCtl();
+
+        EXPECT_EQ(grads_ctl.forecast_time_, boost::posix_time::hours(0));
+        EXPECT_EQ(grads_ctl.start_time_, boost::posix_time::ptime(
+                boost::gregorian::date(2018, 1, 19),
+                boost::posix_time::time_duration(12, 0, 0)
+        ));
+
+        parser.parse("src/grads_parser/test/test_data/model.ctl_2018012400_003");
+        grads_ctl = parser.getGradsCtl();
+
+        EXPECT_EQ(grads_ctl.forecast_time_, boost::posix_time::hours(3));
+        EXPECT_EQ(grads_ctl.start_time_, boost::posix_time::ptime(
+                boost::gregorian::date(2018, 1, 24),
+                boost::posix_time::time_duration(0, 0, 0)
+        ));
+    }
+
 }  // namespace
 
 int main(int argc, char **argv) {
