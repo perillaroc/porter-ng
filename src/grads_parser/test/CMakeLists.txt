@@ -11,3 +11,7 @@ add_test(GradsDataHandlerTest test_grads_data_handler)
 add_executable(test_grads_data_handler_full_data test_grads_data_handler_full_data.cpp)
 target_link_libraries(test_grads_data_handler_full_data grads_parser_lib ${GTEST_BOTH_LIBRARIES} pthread)
 add_test(GradsDataHandlerFullDataTest test_grads_data_handler_full_data)
+
+add_executable(test_grads_ctl_util test_grads_ctl_util.cpp)
+target_link_libraries(test_grads_ctl_util grads_parser_lib ${GTEST_BOTH_LIBRARIES} pthread)
+add_test(GradsCtlUtilTest test_grads_ctl_util)

@@ -36,7 +36,9 @@ set(SOURCE_FILES
         src/grads_ctl.cpp
         src/grads_ctl_parser.cpp
         src/grads_data_handler.cpp
-        src/grads_record_handler.cpp)
+        src/grads_record_handler.cpp
+        src/grads_ctl_util.cpp
+        )
 add_library(grads_parser_lib STATIC ${SOURCE_FILES})
 target_link_libraries(grads_parser_lib ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
 
