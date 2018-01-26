@@ -53,6 +53,7 @@ namespace {
 
         // x def
         EXPECT_EQ(grads_ctl.x_def_.count_, 1440);
+        EXPECT_DOUBLE_EQ(grads_ctl.x_def_.step_, 0.25);
         EXPECT_EQ(grads_ctl.x_def_.type_, GradsParser::DimensionType::Linear);
         auto x_level_values = grads_ctl.x_def_.values_;
         double x_level = 0.0;
@@ -65,6 +66,7 @@ namespace {
 
         // y def
         EXPECT_EQ(grads_ctl.y_def_.count_, 720);
+        EXPECT_DOUBLE_EQ(grads_ctl.y_def_.step_, 0.25);
         EXPECT_EQ(grads_ctl.y_def_.type_, GradsParser::DimensionType::Linear);
         auto y_level_values = grads_ctl.y_def_.values_;
         double y_level = -89.875;

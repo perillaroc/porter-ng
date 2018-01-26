@@ -108,6 +108,7 @@ void GradsCtlParser::parseDimension(std::string dimension_name, std::vector<std:
             return start + step*n;
         });
         dim.type_ = DimensionType::Linear;
+        dim.step_ = step;
     }
     else if(dim_type == "levels")
     {

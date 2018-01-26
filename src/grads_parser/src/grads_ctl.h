@@ -27,6 +27,7 @@ namespace GradsParser
     {
         DimensionType type_ = DimensionType::Unknown;
         size_t count_ = 0;
+        double step_ =0;
         std::vector<double> values_;
     };
 
