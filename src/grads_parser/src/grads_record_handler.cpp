@@ -20,7 +20,7 @@ float reverseFloat(const float inFloat)
     return retVal;
 }
 
-GradsRecordHandler::GradsRecordHandler(const GradsCtl& grads_ctl, ifstream *data_file_stream):
+GradsRecordHandler::GradsRecordHandler(const GradsCtl& grads_ctl, std::shared_ptr<std::ifstream> &data_file_stream):
     x_def_ {grads_ctl.x_def_},
     y_def_{grads_ctl.y_def_},
     data_endian_{grads_ctl.data_endian_},

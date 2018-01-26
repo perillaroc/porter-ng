@@ -1,6 +1,7 @@
 #pragma once
 
 #include <fstream>
+#include <memory>
 
 #include "grads_ctl.h"
 #include "grads_record_handler.h"
@@ -20,12 +21,12 @@ namespace GradsParser {
             return next_variable_index_ < grads_ctl_.vars_.size();
         }
 
-        GradsRecordHandler* loadNext();
+        std::shared_ptr<GradsRecordHandler> loadNext();
 
     private:
         GradsCtl grads_ctl_;
 
-        std::ifstream data_file_stream_;
+        std::shared_ptr<std::ifstream> data_file_stream_;
         int next_variable_index_;
     };
 

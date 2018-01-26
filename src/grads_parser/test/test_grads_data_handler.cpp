@@ -50,7 +50,7 @@ namespace {
     {
         GradsParser::GradsCtlParser parser;
         parser.parse(test_ctl_file_path_);
-        GradsParser::GradsCtl grads_ctl = parser.getGradsCtl();
+        auto grads_ctl = parser.getGradsCtl();
         grads_ctl.data_endian_ = GradsParser::DataEndian::BigEndian;
 
         GradsParser::GradsDataHandler handler{grads_ctl};
@@ -60,13 +60,13 @@ namespace {
         while(handler.hasNext())
         {
             cout<<"Loading variable "<<current_index<<"/"<<grads_ctl.vars_.size()<<endl;
-            GradsParser::GradsRecordHandler *record_handler = handler.loadNext();
+            auto record_handler = handler.loadNext();
 
-            const vector<float> values = record_handler->values();
+            auto values = record_handler->values();
 
             EXPECT_EQ(values.size(), 1036800);
 
-            delete record_handler;
+            record_handler.reset();
 
             current_index++;
         }

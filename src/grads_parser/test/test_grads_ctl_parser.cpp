@@ -44,7 +44,7 @@ namespace {
     TEST_F(GradsCtlParser, MethodParse) {
         GradsParser::GradsCtlParser parser;
         parser.parse(test_ctl_file_path_);
-        GradsParser::GradsCtl grads_ctl = parser.getGradsCtl();
+        auto grads_ctl = parser.getGradsCtl();
 
 
         EXPECT_EQ(grads_ctl.data_file_path_, "src/grads_parser/test/test_data/postvar2018011912_000");
@@ -128,7 +128,7 @@ namespace {
         // variables
         EXPECT_EQ(grads_ctl.var_defs_.size(), 55);
         EXPECT_EQ(grads_ctl.vars_.size(), 397);
-        GradsParser::Variable var = grads_ctl.vars_[0];
+        auto var = grads_ctl.vars_[0];
         EXPECT_EQ(var.name_, "u");
         EXPECT_DOUBLE_EQ(var.level_, 1000.0);
         EXPECT_EQ(var.description_, "u_wind");
@@ -139,9 +139,9 @@ namespace {
         ));
 
 #ifdef PORTER_LITTLE_ENDIAN
-        GradsParser::DataEndian local_endian = GradsParser::DataEndian::LittleEndian;
+        auto local_endian = GradsParser::DataEndian::LittleEndian;
 #else
-        GradsParser::DataEndian local_endian = GradsParser::DataEndian::BigEndian;
+        auto local_endian = GradsParser::DataEndian::BigEndian;
 #endif
         EXPECT_EQ(grads_ctl.local_endian_, local_endian);
         EXPECT_EQ(grads_ctl.data_endian_, local_endian);

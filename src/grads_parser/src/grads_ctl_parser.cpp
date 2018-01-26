@@ -36,7 +36,7 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
 
     while(cur_line_no_ < total_lines)
     {
-        string cur_line = ctl_file_lines_[cur_line_no_];
+        auto cur_line = ctl_file_lines_[cur_line_no_];
         vector<string> tokens;
         alg::split(tokens, cur_line, alg::is_space(), boost::token_compress_on);
         if(!tokens.empty())
@@ -49,7 +49,7 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
             }
             else if(first_word == "title")
             {
-                string title = alg::trim_copy(cur_line.substr(first_word.length()));
+                auto title = alg::trim_copy(cur_line.substr(first_word.length()));
                 grads_ctl_.title_ = title;
             }
             else if(first_word == "undef")
@@ -110,7 +110,7 @@ void GradsCtlParser::parseDimension(std::string dimension_name, std::vector<std:
         for(int level_index=0; level_index<count; level_index++)
         {
             cur_line_no_++;
-            string cur_line = ctl_file_lines_[cur_line_no_];
+            auto cur_line = ctl_file_lines_[cur_line_no_];
             auto level = boost::lexical_cast<double>(alg::trim_copy(cur_line));
             levels[level_index] = level;
         }
@@ -164,10 +164,10 @@ void GradsCtlParser::parseTimeDimension(std::vector<std::string> &tokens)
         boost::posix_time::ptime cur_time;
         is >> cur_time;
 
-        string step_token = tokens[4];
+        auto step_token = tokens[4];
         boost::posix_time::time_duration step_period;
         auto increment_num = boost::lexical_cast<int>(step_token.substr(0, step_token.size()-2));
-        string increment_string = step_token.substr(step_token.size()-2, step_token.size());
+        auto increment_string = step_token.substr(step_token.size()-2, step_token.size());
         if(increment_string == "mn")
         {
             step_period = boost::posix_time::minutes(increment_num);
@@ -195,14 +195,14 @@ void GradsCtlParser::parseTimeDimension(std::vector<std::string> &tokens)
 void GradsCtlParser::parseVariableDefs(std::vector<std::string> &tokens)
 {
     assert(tokens.size() == 2);
-    int count = boost::lexical_cast<int>(tokens[1]);
+    auto count = boost::lexical_cast<int>(tokens[1]);
 
     vector<VariableDefinition> var_defs;
 
     for(auto i = 0; i<count; i++)
     {
         cur_line_no_++;
-        string cur_line = ctl_file_lines_[cur_line_no_];
+        auto cur_line = ctl_file_lines_[cur_line_no_];
         vector<string> var_tokens;
         alg::split(var_tokens, cur_line, alg::is_space(), boost::token_compress_on);
         VariableDefinition var_def;

@@ -12,28 +12,28 @@ GradsDataHandler::GradsDataHandler(GradsCtl &grads_ctl):
 
 }
 
-
 GradsDataHandler::~GradsDataHandler()
 {
-    if(data_file_stream_.is_open())
+    if(data_file_stream_->is_open())
     {
-        data_file_stream_.close();
+        data_file_stream_->close();
     }
 }
 
 void GradsDataHandler::openDataFile()
 {
-    data_file_stream_.open(grads_ctl_.data_file_path_, ios::in | ios::binary);
+    data_file_stream_ = make_shared<ifstream>();
+    data_file_stream_->open(grads_ctl_.data_file_path_, ios::in | ios::binary);
     next_variable_index_ = 0;
 }
 
-GradsRecordHandler* GradsDataHandler::loadNext()
+shared_ptr<GradsRecordHandler> GradsDataHandler::loadNext()
 {
     if(next_variable_index_ == grads_ctl_.vars_.size())
     {
         return nullptr;
     }
-    auto record_handler = new GradsRecordHandler{grads_ctl_, &data_file_stream_};
+    auto record_handler = make_shared<GradsRecordHandler>(grads_ctl_, data_file_stream_);
     record_handler->setVariable(grads_ctl_.vars_[next_variable_index_]);
     record_handler->loadValues();
 

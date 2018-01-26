@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     GradsCtlParser parser;
     parser.parse(ctl_file_path);
 
-    GradsCtl grads_ctl = parser.getGradsCtl();
+    auto grads_ctl = parser.getGradsCtl();
 
 //    for(const auto &line: parser.ctl_file_lines_)
 //    {
