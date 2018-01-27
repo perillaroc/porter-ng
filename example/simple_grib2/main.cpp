@@ -26,7 +26,9 @@ int main(int argc, char *argv[])
     auto grads_ctl = parser.getGradsCtl();
     grads_ctl.data_endian_ = DataEndian::BigEndian;
 
-    auto index = GradsUtil::findVariableIndex(grads_ctl, "u", LevelType::Multi, 1000.0);
+    string var_name = "u";
+    double level = 1000.0;
+    auto index = GradsUtil::findVariableIndex(grads_ctl, var_name, LevelType::Multi, level);
     if(index == -1)
     {
         cerr<<"can't find u at 1000hPa."<<endl;
@@ -40,11 +42,12 @@ int main(int argc, char *argv[])
     // value
     auto record_values = record_handler->values();
     std::vector<float> values = GradsUtil::rearrangeValueMatrix(
-            record_values, grads_ctl.x_def_.count_, grads_ctl.y_def_.count_,
-            grads_ctl.x_def_.step_, grads_ctl.y_def_.step_);
+            record_values, record_handler->xDef().count_, record_handler->yDef().count_,
+            record_handler->yDef().step_, record_handler->yDef().step_);
 
-    int start_hour = grads_ctl.start_time_.time_of_day().hours();
-    int forecast_hour = grads_ctl.forecast_time_.hours();
+    string data_date = GradsUtil::formatDateTime(record_handler->startTime(), "%Y%m%d");
+    int start_hour = record_handler->startTime().time_of_day().hours();
+    int forecast_hour = record_handler->forecastTime().hours();
 
     // grib2
     int err = 0;
@@ -77,7 +80,6 @@ int main(int argc, char *argv[])
         codes_set_long(handle, "significanceOfReferenceTime", 1);
     }
 
-    string data_date = GradsUtil::formatDateTime(grads_ctl.start_time_, "%Y%m%d");
     codes_set_long(handle, "dataDate", boost::lexical_cast<long>(data_date));
     codes_set_long(handle, "dataTime", start_hour);
 
@@ -100,16 +102,16 @@ int main(int argc, char *argv[])
     }
 
     // section 3
-    codes_set_long(handle, "Ni", grads_ctl.x_def_.count_);
-    codes_set_long(handle, "Nj", grads_ctl.y_def_.count_);
+    codes_set_long(handle, "Ni", record_handler->xDef().count_);
+    codes_set_long(handle, "Nj", record_handler->yDef().count_);
 
-    codes_set_double(handle, "longitudeOfFirstGridPointInDegrees", grads_ctl.x_def_.values_.front());
-    codes_set_double(handle, "longitudeOfLastGridPointInDegrees", grads_ctl.x_def_.values_.back());
-    codes_set_double(handle, "iDirectionIncrementInDegrees", grads_ctl.x_def_.step_);
+    codes_set_double(handle, "longitudeOfFirstGridPointInDegrees", record_handler->xDef().values_.front());
+    codes_set_double(handle, "longitudeOfLastGridPointInDegrees", record_handler->xDef().values_.back());
+    codes_set_double(handle, "iDirectionIncrementInDegrees", record_handler->xDef().step_);
 
-    codes_set_double(handle, "latitudeOfFirstGridPointInDegrees", grads_ctl.y_def_.values_.back());
-    codes_set_double(handle, "latitudeOfLastGridPointInDegrees", grads_ctl.y_def_.values_.front());
-    codes_set_double(handle, "jDirectionIncrementInDegrees", grads_ctl.y_def_.step_);
+    codes_set_double(handle, "latitudeOfFirstGridPointInDegrees", record_handler->yDef().values_.back());
+    codes_set_double(handle, "latitudeOfLastGridPointInDegrees", record_handler->yDef().values_.front());
+    codes_set_double(handle, "jDirectionIncrementInDegrees", record_handler->yDef().step_);
 
     // section 4
     codes_set_long(handle, "parameterCategory", 2);
@@ -154,10 +156,12 @@ int main(int argc, char *argv[])
      *
      * see http://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_table4-5.shtml
      */
-    codes_set_long(handle, "typeOfFirstFixedSurface", 100);
-    codes_set_long(handle, "level", long(grads_ctl.z_def_.values_[0]));
-    codes_set_long(handle, "scaleFactorOfFirstFixedSurface", 0);
-//    codes_set_long(handle, "scaledValueOfFirstFixedSurface", long(grads_ctl.z_def_.values_[0]*100));
+//    codes_set_long(handle, "typeOfFirstFixedSurface", 100);
+    codes_get_size(handle, "typeOfLevel", &size);
+    codes_set_string(handle, "typeOfLevel", "isobaricInPa", &size);
+    //codes_set_long(handle, "scaleFactorOfFirstFixedSurface", 0);
+    codes_set_long(handle, "level", long(level*100));
+//    codes_set_long(handle, "scaledValueOfFirstFixedSurface", long(level*100));
 
     // section 5
     codes_get_size(handle, "packingType", &size);

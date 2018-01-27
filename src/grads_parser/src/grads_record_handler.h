@@ -15,10 +15,13 @@ namespace GradsParser {
             variable_ = variable;
         }
 
-        Variable& variable()
-        {
-            return variable_;
-        }
+        Variable& variable() { return variable_; }
+
+        Dimension& xDef() { return x_def_; }
+        Dimension& yDef() { return y_def_; }
+
+        boost::posix_time::ptime& startTime() { return start_time_; };
+        boost::posix_time::time_duration& forecastTime() { return forecast_time_; }
 
         void loadValues();
 
@@ -28,6 +31,9 @@ namespace GradsParser {
         }
 
     private:
+        boost::posix_time::ptime start_time_;
+        boost::posix_time::time_duration forecast_time_;
+
         Dimension x_def_;
         Dimension y_def_;
         Variable variable_;

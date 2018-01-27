@@ -21,6 +21,8 @@ float reverseFloat(const float inFloat)
 }
 
 GradsRecordHandler::GradsRecordHandler(const GradsCtl& grads_ctl, std::shared_ptr<std::ifstream> &data_file_stream):
+    start_time_{grads_ctl.start_time_},
+    forecast_time_{grads_ctl.forecast_time_},
     x_def_ {grads_ctl.x_def_},
     y_def_{grads_ctl.y_def_},
     data_endian_{grads_ctl.data_endian_},
