@@ -43,6 +43,9 @@ int main(int argc, char *argv[])
             record_values, grads_ctl.x_def_.count_, grads_ctl.y_def_.count_,
             grads_ctl.x_def_.step_, grads_ctl.y_def_.step_);
 
+    int start_hour = grads_ctl.start_time_.time_of_day().hours();
+    int forecast_hour = grads_ctl.forecast_time_.hours();
+
     // grib2
     int err = 0;
     size_t size = 0;
@@ -57,14 +60,44 @@ int main(int argc, char *argv[])
     codes_set_long(handle, "centre", 38);
     codes_set_long(handle, "tablesVersion", 4);
     codes_set_long(handle, "localTablesVersion", 1);
-    codes_set_long(handle, "significanceOfReferenceTime", 0);
+
+    /*
+     * significanceOfReferenceTime:
+     *      0: Analysis
+     *      1: Start of Forecast
+     *
+     *  see http://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_table1-2.shtml
+     */
+    if(forecast_hour == 0)
+    {
+        codes_set_long(handle, "significanceOfReferenceTime", 0);
+    }
+    else
+    {
+        codes_set_long(handle, "significanceOfReferenceTime", 1);
+    }
 
     string data_date = GradsUtil::formatDateTime(grads_ctl.start_time_, "%Y%m%d");
     codes_set_long(handle, "dataDate", boost::lexical_cast<long>(data_date));
+    codes_set_long(handle, "dataTime", start_hour);
 
-    codes_set_long(handle, "dataTime", grads_ctl.forecast_time_.hours());
     codes_set_long(handle, "productionStatusOfProcessedData", 0);
-    codes_set_long(handle, "typeOfProcessedData", 0);
+
+    /*
+     * typeOfProcessedData:
+     *      0: Analysis Products
+     *      1: Forecast Products
+     *
+     * see http://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_table1-4.shtml
+     */
+    if(forecast_hour == 0)
+    {
+        codes_set_long(handle, "typeOfProcessedData", 0);
+    }
+    else
+    {
+        codes_set_long(handle, "typeOfProcessedData", 1);
+    }
 
     // section 3
     codes_set_long(handle, "Ni", grads_ctl.x_def_.count_);
@@ -81,15 +114,50 @@ int main(int argc, char *argv[])
     // section 4
     codes_set_long(handle, "parameterCategory", 2);
     codes_set_long(handle, "parameterNumber", 2);
+
+    /**
+     * typeOfGeneratingProcess
+     *  0: Analysis
+     *  2: Forecast
+     */
+    if(forecast_hour == 0)
+    {
+        codes_set_long(handle, "typeOfGeneratingProcess", 0);
+    }
+    else
+    {
+        codes_set_long(handle, "typeOfGeneratingProcess", 2);
+    }
+
+    /**
+     * generatingProcessIdentifier:
+     *  - Analysis or forecast generating processes identifier (defined by originating centre)
+     *  15
+     */
     codes_set_long(handle, "generatingProcessIdentifier", 15);
 
+    /**
+     * indicatorOfUnitOfTimeRange
+     *  0: Minute
+     *  1: Hour
+     *
+     * see http://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_table4-4.shtml
+     */
     codes_set_long(handle, "indicatorOfUnitOfTimeRange", 1);
-    codes_set_long(handle, "forecastTime", grads_ctl.forecast_time_.hours());
-    codes_set_long(handle, "stepUnits", 1);
+//    codes_set_long(handle, "stepUnits", 1);
+    codes_set_long(handle, "forecastTime", forecast_hour);
 
+    /**
+     * typeOfFirstFixedSurface
+     *  100: Isobaric Surface
+     *
+     *
+     * see http://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_table4-5.shtml
+     */
     codes_set_long(handle, "typeOfFirstFixedSurface", 100);
+    codes_set_long(handle, "level", long(grads_ctl.z_def_.values_[0]));
     codes_set_long(handle, "scaleFactorOfFirstFixedSurface", 0);
-    codes_set_long(handle, "scaledValueOfFirstFixedSurface", long(grads_ctl.z_def_.values_[0]*100));
+//    codes_set_long(handle, "scaledValueOfFirstFixedSurface", long(grads_ctl.z_def_.values_[0]*100));
 
     // section 5
     codes_get_size(handle, "packingType", &size);
