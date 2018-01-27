@@ -27,25 +27,25 @@ void GradsDataHandler::openDataFile()
     next_variable_index_ = 0;
 }
 
-shared_ptr<GradsRecordHandler> GradsDataHandler::loadNext()
+shared_ptr<GradsMessagedHandler> GradsDataHandler::loadNext()
 {
-    if(next_variable_index_ == grads_ctl_.vars_.size())
+    if(next_variable_index_ == grads_ctl_.var_infos_.size())
     {
         return nullptr;
     }
-    auto record_handler = make_shared<GradsRecordHandler>(grads_ctl_, data_file_stream_);
-    record_handler->setVariable(grads_ctl_.vars_[next_variable_index_]);
-    record_handler->loadValues();
+    auto message_handler = make_shared<GradsMessagedHandler>(grads_ctl_, data_file_stream_);
+    message_handler->setVariable(grads_ctl_.var_infos_[next_variable_index_]);
+    message_handler->loadValues();
 
     next_variable_index_++;
-    return record_handler;
+    return message_handler;
 }
 
-std::shared_ptr<GradsRecordHandler> GradsDataHandler::loadByIndex(int index)
+std::shared_ptr<GradsMessagedHandler> GradsDataHandler::loadByIndex(int index)
 {
-    if(index >= grads_ctl_.vars_.size())
+    if(index >= grads_ctl_.var_infos_.size())
     {
-        return shared_ptr<GradsRecordHandler>();
+        return shared_ptr<GradsMessagedHandler>();
     }
 
     auto number_of_x = grads_ctl_.x_def_.count_;
@@ -56,11 +56,11 @@ std::shared_ptr<GradsRecordHandler> GradsDataHandler::loadByIndex(int index)
 
     data_file_stream_->seekg(offset);
 
-    auto record_handler = make_shared<GradsRecordHandler>(grads_ctl_, data_file_stream_);
-    record_handler->setVariable(grads_ctl_.vars_[index]);
-    record_handler->loadValues();
+    auto message_handler = make_shared<GradsMessagedHandler>(grads_ctl_, data_file_stream_);
+    message_handler->setVariable(grads_ctl_.var_infos_[index]);
+    message_handler->loadValues();
 
     next_variable_index_ = index + 1;
 
-    return record_handler;
+    return message_handler;
 }

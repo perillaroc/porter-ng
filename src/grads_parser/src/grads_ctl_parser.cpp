@@ -202,7 +202,7 @@ void GradsCtlParser::parseVariableDefs(std::vector<std::string> &tokens)
     assert(tokens.size() == 2);
     auto count = boost::lexical_cast<int>(tokens[1]);
 
-    vector<VariableDefinition> var_defs;
+    vector<VariableRecord> var_records;
 
     for(auto i = 0; i<count; i++)
     {
@@ -210,58 +210,58 @@ void GradsCtlParser::parseVariableDefs(std::vector<std::string> &tokens)
         auto cur_line = ctl_file_lines_[cur_line_no_];
         vector<string> var_tokens;
         alg::split(var_tokens, cur_line, alg::is_space(), boost::token_compress_on);
-        VariableDefinition var_def;
-        var_def.name_ = var_tokens[0];
-        var_def.levels_ = boost::lexical_cast<int>(var_tokens[1]);
-        var_def.units_ = var_tokens[2];
+        VariableRecord var_record;
+        var_record.name_ = var_tokens[0];
+        var_record.levels_ = boost::lexical_cast<int>(var_tokens[1]);
+        var_record.units_ = var_tokens[2];
 
         vector<string> var_description_tokens{var_tokens.begin() + 3, var_tokens.end()};
-        var_def.description_ = boost::algorithm::join(var_description_tokens, " ");
+        var_record.description_ = boost::algorithm::join(var_description_tokens, " ");
 
-        var_defs.push_back(var_def);
+        var_records.push_back(var_record);
     }
 
-    grads_ctl_.var_defs_ = var_defs;
+    grads_ctl_.var_records_ = var_records;
 }
 
 void GradsCtlParser::generateVariableList()
 {
-    vector<Variable> var_list;
+    vector<VariableInfo> var_infos;
 
     for(auto cur_time: grads_ctl_.t_def_.values_)
     {
-        for(auto var_def: grads_ctl_.var_defs_)
+        for(auto var_def: grads_ctl_.var_records_)
         {
             if(var_def.levels_ == 0)
             {
-                Variable var;
-                var.name_ = var_def.name_;
-                var.level_type_ = LevelType::Single;
-                var.level_ = 0;
-                var.units_ = var_def.units_;
-                var.description_ = var_def.description_;
-                var.time_ = cur_time;
-                var_list.push_back(var);
+                VariableInfo variable_info;
+                variable_info.name_ = var_def.name_;
+                variable_info.level_type_ = LevelType::Single;
+                variable_info.level_ = 0;
+                variable_info.units_ = var_def.units_;
+                variable_info.description_ = var_def.description_;
+                variable_info.time_ = cur_time;
+                var_infos.push_back(variable_info);
             }
             else
             {
                 for(auto i=0; i<var_def.levels_; i++)
                 {
-                    Variable var;
-                    var.name_ = var_def.name_;
-                    var.level_type_ = LevelType::Multi;
-                    var.level_ = grads_ctl_.z_def_.values_[i];
-                    var.level_index_ = i;
-                    var.units_ = var_def.units_;
-                    var.description_ = var_def.description_;
-                    var.time_ = cur_time;
-                    var_list.push_back(var);
+                    VariableInfo variable_info;
+                    variable_info.name_ = var_def.name_;
+                    variable_info.level_type_ = LevelType::Multi;
+                    variable_info.level_ = grads_ctl_.z_def_.values_[i];
+                    variable_info.level_index_ = i;
+                    variable_info.units_ = var_def.units_;
+                    variable_info.description_ = var_def.description_;
+                    variable_info.time_ = cur_time;
+                    var_infos.push_back(variable_info);
                 }
             }
         }
     }
 
-    grads_ctl_.vars_ = var_list;
+    grads_ctl_.var_infos_ = var_infos;
 }
 
 void GradsCtlParser::parseFileName()

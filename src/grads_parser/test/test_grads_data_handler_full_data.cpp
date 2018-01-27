@@ -61,7 +61,7 @@ namespace {
         int current_index = 1;
         while(handler.hasNext())
         {
-            cout<<"Loading variable "<<current_index<<"/"<<grads_ctl.vars_.size()<<"...";
+            cout<<"Loading variable "<<current_index<<"/"<<grads_ctl.var_infos_.size()<<"...";
 
             high_resolution_clock::time_point start_time = high_resolution_clock::now();
             auto record_handler = handler.loadNext();

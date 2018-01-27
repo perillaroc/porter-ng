@@ -44,7 +44,7 @@ namespace GradsParser
         Multi,
     };
 
-    class VariableDefinition
+    class VariableRecord
     {
     public:
         std::string name_;
@@ -53,7 +53,7 @@ namespace GradsParser
         std::string description_;
     };
 
-    struct Variable
+    struct VariableInfo
     {
         std::string name_;
         LevelType level_type_ = LevelType::Multi;
@@ -87,9 +87,8 @@ namespace GradsParser
         Dimension z_def_;
         TimeDimension t_def_;
 
-
-        std::vector<VariableDefinition> var_defs_;
-        std::vector<Variable> vars_;
+        std::vector<VariableRecord> var_records_;
+        std::vector<VariableInfo> var_infos_;
 
         // special vars
         boost::posix_time::ptime start_time_;

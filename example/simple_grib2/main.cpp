@@ -37,17 +37,17 @@ int main(int argc, char *argv[])
 
     GradsDataHandler data_handler{grads_ctl};
     data_handler.openDataFile();
-    auto record_handler = data_handler.loadByIndex(index);
+    auto message_handler = data_handler.loadByIndex(index);
 
     // value
-    auto record_values = record_handler->values();
+    auto message_values = message_handler->values();
     std::vector<float> values = GradsUtil::rearrangeValueMatrix(
-            record_values, record_handler->xDef().count_, record_handler->yDef().count_,
-            record_handler->yDef().step_, record_handler->yDef().step_);
+            message_values, message_handler->xDef().count_, message_handler->yDef().count_,
+            message_handler->yDef().step_, message_handler->yDef().step_);
 
-    string data_date = GradsUtil::formatDateTime(record_handler->startTime(), "%Y%m%d");
-    int start_hour = record_handler->startTime().time_of_day().hours();
-    int forecast_hour = record_handler->forecastTime().hours();
+    string data_date = GradsUtil::formatDateTime(message_handler->startTime(), "%Y%m%d");
+    int start_hour = message_handler->startTime().time_of_day().hours();
+    int forecast_hour = message_handler->forecastTime().hours();
 
     // grib2
     int err = 0;
@@ -102,16 +102,16 @@ int main(int argc, char *argv[])
     }
 
     // section 3
-    codes_set_long(handle, "Ni", record_handler->xDef().count_);
-    codes_set_long(handle, "Nj", record_handler->yDef().count_);
+    codes_set_long(handle, "Ni", message_handler->xDef().count_);
+    codes_set_long(handle, "Nj", message_handler->yDef().count_);
 
-    codes_set_double(handle, "longitudeOfFirstGridPointInDegrees", record_handler->xDef().values_.front());
-    codes_set_double(handle, "longitudeOfLastGridPointInDegrees", record_handler->xDef().values_.back());
-    codes_set_double(handle, "iDirectionIncrementInDegrees", record_handler->xDef().step_);
+    codes_set_double(handle, "longitudeOfFirstGridPointInDegrees", message_handler->xDef().values_.front());
+    codes_set_double(handle, "longitudeOfLastGridPointInDegrees", message_handler->xDef().values_.back());
+    codes_set_double(handle, "iDirectionIncrementInDegrees", message_handler->xDef().step_);
 
-    codes_set_double(handle, "latitudeOfFirstGridPointInDegrees", record_handler->yDef().values_.back());
-    codes_set_double(handle, "latitudeOfLastGridPointInDegrees", record_handler->yDef().values_.front());
-    codes_set_double(handle, "jDirectionIncrementInDegrees", record_handler->yDef().step_);
+    codes_set_double(handle, "latitudeOfFirstGridPointInDegrees", message_handler->yDef().values_.back());
+    codes_set_double(handle, "latitudeOfLastGridPointInDegrees", message_handler->yDef().values_.front());
+    codes_set_double(handle, "jDirectionIncrementInDegrees", message_handler->yDef().step_);
 
     // section 4
     codes_set_long(handle, "parameterCategory", 2);

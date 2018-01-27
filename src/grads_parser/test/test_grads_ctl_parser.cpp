@@ -128,9 +128,9 @@ namespace {
         ));
 
         // variables
-        EXPECT_EQ(grads_ctl.var_defs_.size(), 55);
-        EXPECT_EQ(grads_ctl.vars_.size(), 397);
-        auto var = grads_ctl.vars_[0];
+        EXPECT_EQ(grads_ctl.var_records_.size(), 55);
+        EXPECT_EQ(grads_ctl.var_infos_.size(), 397);
+        auto var = grads_ctl.var_infos_[0];
         EXPECT_EQ(var.name_, "u");
         EXPECT_DOUBLE_EQ(var.level_, 1000.0);
         EXPECT_EQ(var.description_, "u_wind");

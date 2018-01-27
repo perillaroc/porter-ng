@@ -1,4 +1,4 @@
-#include "grads_record_handler.h"
+#include "grads_message_handler.h"
 
 using namespace GradsParser;
 using namespace std;
@@ -20,7 +20,7 @@ float reverseFloat(const float inFloat)
     return retVal;
 }
 
-GradsRecordHandler::GradsRecordHandler(const GradsCtl& grads_ctl, std::shared_ptr<std::ifstream> &data_file_stream):
+GradsMessagedHandler::GradsMessagedHandler(const GradsCtl& grads_ctl, std::shared_ptr<std::ifstream> &data_file_stream):
     start_time_{grads_ctl.start_time_},
     forecast_time_{grads_ctl.forecast_time_},
     x_def_ {grads_ctl.x_def_},
@@ -32,7 +32,7 @@ GradsRecordHandler::GradsRecordHandler(const GradsCtl& grads_ctl, std::shared_pt
 
 }
 
-void GradsRecordHandler::loadValues()
+void GradsMessagedHandler::loadValues()
 {
     auto number_of_x = x_def_.count_;
     auto number_of_y = y_def_.count_;

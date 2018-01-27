@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "grads_ctl.h"
-#include "grads_record_handler.h"
+#include "grads_message_handler.h"
 
 namespace GradsParser {
 
@@ -18,12 +18,12 @@ namespace GradsParser {
 
         bool hasNext() const
         {
-            return next_variable_index_ < grads_ctl_.vars_.size();
+            return next_variable_index_ < grads_ctl_.var_infos_.size();
         }
 
-        std::shared_ptr<GradsRecordHandler> loadNext();
+        std::shared_ptr<GradsMessagedHandler> loadNext();
 
-        std::shared_ptr<GradsRecordHandler> loadByIndex(int index);
+        std::shared_ptr<GradsMessagedHandler> loadByIndex(int index);
 
     private:
         GradsCtl grads_ctl_;

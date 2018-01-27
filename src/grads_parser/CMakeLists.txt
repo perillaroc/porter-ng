@@ -36,7 +36,7 @@ set(SOURCE_FILES
         src/grads_ctl.cpp
         src/grads_ctl_parser.cpp
         src/grads_data_handler.cpp
-        src/grads_record_handler.cpp
+        src/grads_message_handler.cpp
         src/grads_ctl_util.cpp
         )
 add_library(grads_parser STATIC ${SOURCE_FILES})

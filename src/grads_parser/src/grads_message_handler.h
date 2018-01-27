@@ -6,16 +6,16 @@
 
 namespace GradsParser {
 
-    class GradsRecordHandler {
+    class GradsMessagedHandler {
     public:
-        explicit GradsRecordHandler(const GradsCtl& grads_ctl, std::shared_ptr<std::ifstream> &data_file_stream);
+        explicit GradsMessagedHandler(const GradsCtl& grads_ctl, std::shared_ptr<std::ifstream> &data_file_stream);
 
-        void setVariable(const Variable &variable)
+        void setVariable(const VariableInfo &variable)
         {
-            variable_ = variable;
+            variable_info_ = variable;
         }
 
-        Variable& variable() { return variable_; }
+        VariableInfo& variable() { return variable_info_; }
 
         Dimension& xDef() { return x_def_; }
         Dimension& yDef() { return y_def_; }
@@ -25,7 +25,7 @@ namespace GradsParser {
 
         void loadValues();
 
-        const std::vector<float>& values()
+        const std::vector<float>& values() const
         {
             return values_;
         }
@@ -36,7 +36,7 @@ namespace GradsParser {
 
         Dimension x_def_;
         Dimension y_def_;
-        Variable variable_;
+        VariableInfo variable_info_;
         DataEndian data_endian_;
         DataEndian local_endian_;
 

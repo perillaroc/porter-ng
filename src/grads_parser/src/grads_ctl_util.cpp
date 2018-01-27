@@ -9,12 +9,12 @@ int GradsUtil::findVariableIndex(
         LevelType level_type,
         double level)
 {
-    auto vars = grads_ctl.vars_;
-    auto count = grads_ctl.vars_.size();
+    auto vars = grads_ctl.var_infos_;
+    auto count = grads_ctl.var_infos_.size();
     int index = -1;
     for(auto i=0; i<count; i++)
     {
-        auto var = grads_ctl.vars_[i];
+        auto var = grads_ctl.var_infos_[i];
         if(var.name_ == variable_name
            && var.level_type_ == level_type
            && var.level_ == level)
