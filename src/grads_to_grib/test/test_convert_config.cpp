@@ -48,6 +48,25 @@ namespace {
 
         EXPECT_EQ(v_config.string_keys_.at("typeOfLevel"), "isobaricInPa");
     }
+
+    TEST_F(ConvertConfigTest, MethodFindParamConfig)
+    {
+        string config_file_path = "src/grads_to_grib/test/data/grapes_gfs_postvar.config.yaml";
+        ConvertConfig convert_config;
+        convert_config.parse(config_file_path);
+
+        auto case1 = convert_config.findParamConfig("u");
+        EXPECT_NE(case1, end(convert_config.paramConfigs()));
+        auto case1_param_config = *case1;
+        EXPECT_EQ(case1_param_config.number_keys_["discipline"], 0);
+        EXPECT_EQ(case1_param_config.number_keys_["parameterCategory"], 2);
+        EXPECT_EQ(case1_param_config.number_keys_["parameterNumber"], 2);
+        EXPECT_EQ(case1_param_config.string_keys_["typeOfLevel"], "isobaricInPa");
+
+        auto case2 = convert_config.findParamConfig("error_param_name");
+        EXPECT_EQ(case2, end(convert_config.paramConfigs()));
+
+    }
 }
 
 int main(int argc, char **argv) {

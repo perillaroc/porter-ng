@@ -2,6 +2,7 @@
 
 #include <yaml.h>
 #include <iostream>
+#include <algorithm>
 
 #include <boost/lexical_cast.hpp>
 
@@ -45,4 +46,31 @@ void ConvertConfig::parse(const string &config_file_path)
         param_configs_.push_back(param_config);
     }
     return;
+}
+
+vector<ParamConfig>::iterator
+ConvertConfig::findParamConfig(const string &name, double *level)
+{
+    auto iter = param_configs_.begin();
+    while(iter != param_configs_.end())
+    {
+        auto param_config = *iter;
+        if(param_config.name_ != name)
+        {
+            ++iter;
+            continue;
+        }
+        if(level == nullptr || param_config.levels_.empty())
+        {
+            break;
+        }
+        auto result = std::find(begin(param_config.levels_), end(param_config.levels_), *level);
+        if(result != end(param_config.levels_))
+        {
+            break;
+        }
+        ++iter;
+    }
+
+    return iter;
 }
