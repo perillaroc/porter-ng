@@ -10,20 +10,18 @@ namespace GradsParser {
 
         void parse(const std::string &ctl_file_path);
 
-        GradsCtl& getGradsCtl()
-        {
-            return grads_ctl_;
-        }
+        GradsCtl& getGradsCtl() { return grads_ctl_; }
 
     private:
+        void loadCtlFileLines();
 
-        void parseDset(std::vector<std::string> &tokens);
+        void parseDataSet(std::vector<std::string> &tokens);
 
         void parseDimension(std::string dimension_name, std::vector<std::string> &tokens);
 
         void parseTimeDimension(std::vector<std::string> &tokens);
 
-        void parseVariableDefs(std::vector<std::string> &tokens);
+        void parseVariableRecords(std::vector<std::string> &tokens);
 
         void parseFileName();
 

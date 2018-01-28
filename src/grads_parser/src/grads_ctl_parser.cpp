@@ -24,13 +24,7 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
     ctl_file_path_ = ctl_file_path;
     grads_ctl_.ctl_file_path_ = ctl_file_path_;
 
-    ctl_file_lines_.clear();
-    ifstream ctl_file(ctl_file_path_);
-    string line;
-    while(getline(ctl_file, line))
-    {
-        ctl_file_lines_.push_back(line);
-    }
+    loadCtlFileLines();
 
     cur_line_no_ = 0;
 
@@ -47,7 +41,7 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
             // cout<<first_word<<endl;
             if(first_word == "dset")
             {
-                parseDset(tokens);
+                parseDataSet(tokens);
             }
             else if(first_word == "title")
             {
@@ -69,7 +63,7 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
             }
             else if(first_word == "vars")
             {
-                parseVariableDefs(tokens);
+                parseVariableRecords(tokens);
             }
         }
         cur_line_no_++;
@@ -80,7 +74,19 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
     parseFileName();
 }
 
-void GradsCtlParser::parseDset(vector<string> &tokens) {
+void GradsCtlParser::loadCtlFileLines()
+{
+    ctl_file_lines_.clear();
+    ifstream ctl_file(ctl_file_path_);
+    string line;
+    while(getline(ctl_file, line))
+    {
+        ctl_file_lines_.push_back(line);
+    }
+}
+
+
+void GradsCtlParser::parseDataSet(vector<string> &tokens) {
     string data_file_path = tokens[1];
     if(data_file_path[0] == '^')
     {
@@ -197,7 +203,7 @@ void GradsCtlParser::parseTimeDimension(std::vector<std::string> &tokens)
 
 }
 
-void GradsCtlParser::parseVariableDefs(std::vector<std::string> &tokens)
+void GradsCtlParser::parseVariableRecords(std::vector<std::string> &tokens)
 {
     assert(tokens.size() == 2);
     auto count = boost::lexical_cast<int>(tokens[1]);
