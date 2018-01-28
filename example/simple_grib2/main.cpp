@@ -149,6 +149,8 @@ int main(int argc, char *argv[])
 //    codes_set_long(handle, "stepUnits", 1);
     codes_set_long(handle, "forecastTime", forecast_hour);
 
+    // set parameter's level
+
     /**
      * typeOfFirstFixedSurface
      *  100: Isobaric Surface

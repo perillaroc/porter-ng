@@ -16,34 +16,24 @@ namespace {
         // is empty.
 
         GradsCtlParser() {
-            // You can do set-up work for each test here.
+            postvar_ctl_file_path_ = "src/grads_parser/test/test_data/post.ctl_2018011912_000";
+            modelvar_ctl_file_path_ = "src/grads_parser/test/test_data/model.ctl_2018012600_003";
         }
 
-        virtual ~GradsCtlParser() {
-            // You can do clean-up work that doesn't throw exceptions here.
-        }
+        virtual ~GradsCtlParser() {}
 
-        // If the constructor and destructor are not enough for setting up
-        // and cleaning up each test, you can define the following methods:
+        virtual void SetUp() {}
 
-        virtual void SetUp() {
-            // Code here will be called immediately after the constructor (right
-            // before each test).
-            test_ctl_file_path_ = "src/grads_parser/test/test_data/post.ctl_2018011912_000";
-        }
-
-        virtual void TearDown() {
-            // Code here will be called immediately after each test (right
-            // before the destructor).
-        }
+        virtual void TearDown() {}
 
         // Objects declared here can be used by all tests in the test case for Foo.
-        string test_ctl_file_path_;
+        string postvar_ctl_file_path_;
+        string modelvar_ctl_file_path_;
     };
 
-    TEST_F(GradsCtlParser, MethodParse) {
+    TEST_F(GradsCtlParser, TestPostVarParse) {
         GradsParser::GradsCtlParser parser;
-        parser.parse(test_ctl_file_path_);
+        parser.parse(postvar_ctl_file_path_);
         auto grads_ctl = parser.getGradsCtl();
 
 
@@ -54,7 +44,7 @@ namespace {
         // x def
         EXPECT_EQ(grads_ctl.x_def_.count_, 1440);
         EXPECT_DOUBLE_EQ(grads_ctl.x_def_.step_, 0.25);
-        EXPECT_EQ(grads_ctl.x_def_.type_, GradsParser::DimensionType::Linear);
+        EXPECT_EQ(grads_ctl.x_def_.mapping_type_, GradsParser::DimensionMappingType::Linear);
         auto x_level_values = grads_ctl.x_def_.values_;
         double x_level = 0.0;
         double x_step = 0.25;
@@ -67,7 +57,7 @@ namespace {
         // y def
         EXPECT_EQ(grads_ctl.y_def_.count_, 720);
         EXPECT_DOUBLE_EQ(grads_ctl.y_def_.step_, 0.25);
-        EXPECT_EQ(grads_ctl.y_def_.type_, GradsParser::DimensionType::Linear);
+        EXPECT_EQ(grads_ctl.y_def_.mapping_type_, GradsParser::DimensionMappingType::Linear);
         auto y_level_values = grads_ctl.y_def_.values_;
         double y_level = -89.875;
         double y_step = 0.25;
@@ -79,7 +69,7 @@ namespace {
 
         // z def
         EXPECT_EQ(grads_ctl.z_def_.count_, 29);
-        EXPECT_EQ(grads_ctl.z_def_.type_, GradsParser::DimensionType::Level);
+        EXPECT_EQ(grads_ctl.z_def_.mapping_type_, GradsParser::DimensionMappingType::Level);
         auto z_level_values = grads_ctl.z_def_.values_;
         vector<double> z_level_expected_values = {
                 1000.000000,
@@ -119,7 +109,7 @@ namespace {
 
         // t def
         EXPECT_EQ(grads_ctl.t_def_.count_, 1);
-        EXPECT_EQ(grads_ctl.t_def_.type_, GradsParser::DimensionType::Linear);
+        EXPECT_EQ(grads_ctl.t_def_.mapping_type_, GradsParser::DimensionMappingType::Linear);
         auto t_values = grads_ctl.t_def_.values_;
         EXPECT_EQ(t_values.size(), 1);
         EXPECT_EQ(t_values[0], boost::posix_time::ptime(
@@ -133,11 +123,97 @@ namespace {
         auto var = grads_ctl.var_infos_[0];
         EXPECT_EQ(var.name_, "u");
         EXPECT_DOUBLE_EQ(var.level_, 1000.0);
+        EXPECT_EQ(var.level_type_, GradsParser::LevelType::Multi);
+        EXPECT_EQ(var.level_mapping_type_, GradsParser::DimensionMappingType::Level);
         EXPECT_EQ(var.description_, "u_wind");
         EXPECT_EQ(var.units_, "0");
         EXPECT_EQ(var.time_, boost::posix_time::ptime(
                 boost::gregorian::date(2018, 1, 19),
                 boost::posix_time::time_duration(12, 0, 0)
+        ));
+
+#ifdef PORTER_LITTLE_ENDIAN
+        auto local_endian = GradsParser::DataEndian::LittleEndian;
+#else
+        auto local_endian = GradsParser::DataEndian::BigEndian;
+#endif
+        EXPECT_EQ(grads_ctl.local_endian_, local_endian);
+        EXPECT_EQ(grads_ctl.data_endian_, local_endian);
+    }
+
+    TEST_F(GradsCtlParser, TestModelVarParse) {
+        GradsParser::GradsCtlParser parser;
+        parser.parse(modelvar_ctl_file_path_);
+        auto grads_ctl = parser.getGradsCtl();
+
+
+        EXPECT_EQ(grads_ctl.data_file_path_, "src/grads_parser/test/test_data/modelvar2018012600_003");
+        EXPECT_EQ(grads_ctl.title_, "model output from grapes");
+        EXPECT_DOUBLE_EQ(grads_ctl.undefined_value_, -9.99e33);
+
+        // x def
+        EXPECT_EQ(grads_ctl.x_def_.count_, 1440);
+        EXPECT_DOUBLE_EQ(grads_ctl.x_def_.step_, 0.25);
+        EXPECT_EQ(grads_ctl.x_def_.mapping_type_, GradsParser::DimensionMappingType::Linear);
+        auto x_level_values = grads_ctl.x_def_.values_;
+        double x_level = 0.0;
+        double x_step = 0.25;
+        for(auto i=0; i<grads_ctl.x_def_.count_; i++)
+        {
+            EXPECT_DOUBLE_EQ(x_level_values[i], x_level);
+            x_level += x_step;
+        }
+
+        // y def
+        EXPECT_EQ(grads_ctl.y_def_.count_, 721);
+        EXPECT_DOUBLE_EQ(grads_ctl.y_def_.step_, 0.25);
+        EXPECT_EQ(grads_ctl.y_def_.mapping_type_, GradsParser::DimensionMappingType::Linear);
+        auto y_level_values = grads_ctl.y_def_.values_;
+        double y_level = -90;
+        double y_step = 0.25;
+        for(auto i=0; i<grads_ctl.y_def_.count_; i++)
+        {
+            EXPECT_DOUBLE_EQ(y_level_values[i], y_level);
+            y_level += y_step;
+        }
+
+        // z def
+        EXPECT_EQ(grads_ctl.z_def_.count_, 62);
+        EXPECT_EQ(grads_ctl.z_def_.mapping_type_, GradsParser::DimensionMappingType::Linear);
+        EXPECT_EQ(grads_ctl.z_def_.step_, 1);
+        auto z_level_values = grads_ctl.z_def_.values_;
+
+        double z_level = 1;
+        double z_step = 1;
+        for(auto i=0; i<29; i++)
+        {
+            EXPECT_DOUBLE_EQ(z_level_values[i], z_level);
+            z_level += z_step;
+        }
+
+        // t def
+        EXPECT_EQ(grads_ctl.t_def_.count_, 1);
+        EXPECT_EQ(grads_ctl.t_def_.mapping_type_, GradsParser::DimensionMappingType::Linear);
+        auto t_values = grads_ctl.t_def_.values_;
+        EXPECT_EQ(t_values.size(), 1);
+        EXPECT_EQ(t_values[0], boost::posix_time::ptime(
+                boost::gregorian::date(2018, 1, 26),
+                boost::posix_time::time_duration(3, 0, 0)
+        ));
+
+        // variables
+        EXPECT_EQ(grads_ctl.var_records_.size(), 57);
+        EXPECT_EQ(grads_ctl.var_infos_.size(), 1023);
+        auto var = grads_ctl.var_infos_[0];
+        EXPECT_EQ(var.name_, "pip");
+        EXPECT_DOUBLE_EQ(var.level_, 1);
+        EXPECT_EQ(var.level_type_, GradsParser::LevelType::Multi);
+        EXPECT_EQ(var.level_mapping_type_, GradsParser::DimensionMappingType::Linear);
+        EXPECT_EQ(var.description_, "perturbed PI");
+        EXPECT_EQ(var.units_, "99");
+        EXPECT_EQ(var.time_, boost::posix_time::ptime(
+                boost::gregorian::date(2018, 1, 26),
+                boost::posix_time::time_duration(3, 0, 0)
         ));
 
 #ifdef PORTER_LITTLE_ENDIAN
@@ -161,12 +237,12 @@ namespace {
                 boost::posix_time::time_duration(12, 0, 0)
         ));
 
-        parser.parse("src/grads_parser/test/test_data/model.ctl_2018012400_003");
+        parser.parse("src/grads_parser/test/test_data/model.ctl_2018012600_003");
         grads_ctl = parser.getGradsCtl();
 
         EXPECT_EQ(grads_ctl.forecast_time_, boost::posix_time::hours(3));
         EXPECT_EQ(grads_ctl.start_time_, boost::posix_time::ptime(
-                boost::gregorian::date(2018, 1, 24),
+                boost::gregorian::date(2018, 1, 26),
                 boost::posix_time::time_duration(0, 0, 0)
         ));
     }

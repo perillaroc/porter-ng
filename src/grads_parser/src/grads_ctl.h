@@ -16,7 +16,7 @@ namespace GradsParser
         LittleEndian,
     };
 
-    enum class DimensionType
+    enum class DimensionMappingType
     {
         Unknown,
         Linear,
@@ -25,7 +25,7 @@ namespace GradsParser
 
     struct Dimension
     {
-        DimensionType type_ = DimensionType::Unknown;
+        DimensionMappingType mapping_type_ = DimensionMappingType::Unknown;
         size_t count_ = 0;
         double step_ =0;
         std::vector<double> values_;
@@ -33,7 +33,7 @@ namespace GradsParser
 
     struct TimeDimension
     {
-        DimensionType type_ = DimensionType::Unknown;
+        DimensionMappingType mapping_type_ = DimensionMappingType::Unknown;
         size_t count_ = 0;
         std::vector<boost::posix_time::ptime> values_;
     };
@@ -57,6 +57,7 @@ namespace GradsParser
     {
         std::string name_;
         LevelType level_type_ = LevelType::Multi;
+        DimensionMappingType level_mapping_type_ = DimensionMappingType::Unknown;
         double level_ = -1;
         size_t level_index_ = 0;
         std::string units_;

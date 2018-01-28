@@ -113,7 +113,7 @@ void GradsCtlParser::parseDimension(std::string dimension_name, std::vector<std:
             n = n+1;
             return start + step*n;
         });
-        dim.type_ = DimensionType::Linear;
+        dim.mapping_type_ = DimensionMappingType::Linear;
         dim.step_ = step;
     }
     else if(dim_type == "levels")
@@ -125,7 +125,7 @@ void GradsCtlParser::parseDimension(std::string dimension_name, std::vector<std:
             auto level = boost::lexical_cast<double>(alg::trim_copy(cur_line));
             levels[level_index] = level;
         }
-        dim.type_ = DimensionType::Level;
+        dim.mapping_type_ = DimensionMappingType::Level;
     }
 
     dim.count_ = count;
@@ -196,7 +196,7 @@ void GradsCtlParser::parseTimeDimension(std::vector<std::string> &tokens)
         }
         dim.values_ = times;
 
-        dim.type_ = DimensionType::Linear;
+        dim.mapping_type_ = DimensionMappingType::Linear;
     }
 
     grads_ctl_.t_def_ = dim;
@@ -243,6 +243,7 @@ void GradsCtlParser::generateVariableList()
                 VariableInfo variable_info;
                 variable_info.name_ = var_def.name_;
                 variable_info.level_type_ = LevelType::Single;
+                variable_info.level_mapping_type_ = grads_ctl_.z_def_.mapping_type_;
                 variable_info.level_ = 0;
                 variable_info.units_ = var_def.units_;
                 variable_info.description_ = var_def.description_;
@@ -256,6 +257,7 @@ void GradsCtlParser::generateVariableList()
                     VariableInfo variable_info;
                     variable_info.name_ = var_def.name_;
                     variable_info.level_type_ = LevelType::Multi;
+                    variable_info.level_mapping_type_ = grads_ctl_.z_def_.mapping_type_;
                     variable_info.level_ = grads_ctl_.z_def_.values_[i];
                     variable_info.level_index_ = i;
                     variable_info.units_ = var_def.units_;
