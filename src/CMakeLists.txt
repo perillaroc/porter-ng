@@ -1,1 +1,2 @@
 add_subdirectory(grads_parser)
+add_subdirectory(grads_to_grib)

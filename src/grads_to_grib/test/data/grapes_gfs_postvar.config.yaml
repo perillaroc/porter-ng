@@ -1,0 +1,33 @@
+params:
+  -
+    name: u
+    keys:
+      # param
+      discipline: 0
+      parameterCategory: 2
+      parameterNumber: 2
+
+      # level
+      typeOfLevel: isobaricInPa
+
+  -
+    name: v
+    keys:
+      # param
+      discipline: 0
+      parameterCategory: 2
+      parameterNumber: 3
+
+      # level
+      typeOfLevel: isobaricInPa
+
+  -
+      name: t
+      keys:
+        # param
+        discipline: 0
+        parameterCategory: 0
+        parameterNumber: 0
+
+        # level
+        typeOfLevel: isobaricInPa
