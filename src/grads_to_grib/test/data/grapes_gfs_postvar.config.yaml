@@ -31,3 +31,14 @@ params:
 
         # level
         typeOfLevel: isobaricInPa
+
+  -
+        name: h
+        keys:
+          # param
+          discipline: 0
+          parameterCategory: 3
+          parameterNumber: 5
+
+          # level
+          typeOfLevel: isobaricInPa

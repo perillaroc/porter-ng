@@ -23,6 +23,7 @@ find_library(
 set(PORTER_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/grads_parser/src
         ${CMAKE_CURRENT_BINARY_DIR}/src/grads_parser/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/grads_to_grib/src
         )
 
 add_subdirectory(src)

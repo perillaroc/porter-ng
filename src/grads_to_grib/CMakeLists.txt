@@ -35,6 +35,7 @@ include_directories(${YAMLCPP_INCLUDE_DIR})
 # lib
 set(SOURCE_FILES
         src/convert_config.cpp
+        src/grads_to_grib_converter.cpp
         )
 add_library(grads_to_grib STATIC ${SOURCE_FILES})
 target_link_libraries(grads_to_grib grads_parser ${YAMLCPP_LIBRARY})

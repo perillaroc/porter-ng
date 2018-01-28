@@ -51,8 +51,8 @@ void ConvertConfig::parse(const string &config_file_path)
 vector<ParamConfig>::iterator
 ConvertConfig::findParamConfig(const string &name, double *level)
 {
-    auto iter = param_configs_.begin();
-    while(iter != param_configs_.end())
+    auto iter = std::begin(param_configs_);
+    while(iter != std::end(param_configs_))
     {
         auto param_config = *iter;
         if(param_config.name_ != name)
