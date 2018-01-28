@@ -78,7 +78,7 @@ void GradsToGribConverter::convert()
 void GradsToGribConverter::convertMessage(
         shared_ptr<GradsParser::GradsMessagedHandler> message_handler,
         const ParamConfig &param_config,
-        int message_index)
+        int message_count)
 {
     auto level = message_handler->variable().level_;
 
@@ -158,13 +158,6 @@ void GradsToGribConverter::convertMessage(
     codes_set_long(handle, "indicatorOfUnitOfTimeRange", 1);
     codes_set_long(handle, "forecastTime", forecast_hour);
 
-    // set parameter's level
-
-    codes_get_size(handle, "typeOfLevel", &size);
-    codes_set_string(handle, "typeOfLevel", "isobaricInPa", &size);
-    codes_set_long(handle, "level", long(level*100));
-
-    //
     for(auto key: param_config.number_keys_)
     {
         auto key_name = key.first;
@@ -177,6 +170,7 @@ void GradsToGribConverter::convertMessage(
         codes_set_string(handle, key_name.c_str(), key.second.c_str(), &size);
     }
 
+    // set parameter's level
     if(param_config.string_keys_.find("typeOfLevel") != end(param_config.string_keys_))
     {
         auto type_of_level = param_config.string_keys_.at("typeOfLevel");
@@ -197,11 +191,16 @@ void GradsToGribConverter::convertMessage(
 
     // section 7
     std::vector<double> double_values(values.begin(), values.end());
+    if(message_handler->variable().name_ == "t")
+    {
+        std::transform(begin(double_values), end(double_values), begin(double_values),
+                       [](double t) -> double { return t + 273.15; });
+    }
     double *value_array = &double_values[0];
     codes_set_double_array(handle, "values", value_array, values.size());
 
     const char* output_file_mode = "wb";
-    if(message_index > 0)
+    if(message_count > 0)
     {
         output_file_mode = "ab";
     }

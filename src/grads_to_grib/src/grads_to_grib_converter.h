@@ -25,7 +25,7 @@ namespace GradsToGrib {
 
     private:
         void convertMessage(std::shared_ptr<GradsParser::GradsMessagedHandler> message_handler,
-                            const ParamConfig &param_config, int message_index);
+                            const ParamConfig &param_config, int message_count);
 
         std::string convert_config_file_path_;
         std::string ctl_file_path_;
