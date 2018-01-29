@@ -30,7 +30,7 @@ namespace {
 
         vector<ParamConfig> param_configs = convert_config.paramConfigs();
 
-        EXPECT_EQ(param_configs.size(), 3);
+        EXPECT_EQ(param_configs.size(), 5);
 
         ParamConfig u_config = param_configs[0];
         EXPECT_EQ(u_config.name_, "u");
@@ -47,6 +47,22 @@ namespace {
         EXPECT_EQ(v_config.number_keys_.at("parameterNumber"), 3);
 
         EXPECT_EQ(v_config.string_keys_.at("typeOfLevel"), "isobaricInPa");
+
+        ParamConfig tsoil_config = param_configs[4];
+        EXPECT_EQ(tsoil_config.name_, "tsoil");
+
+        vector<double> tsoil_expected_levels = {1000.0};
+        EXPECT_EQ(tsoil_config.levels_, tsoil_expected_levels);
+
+        EXPECT_EQ(tsoil_config.number_keys_.at("discipline"), 0);
+        EXPECT_EQ(tsoil_config.number_keys_.at("parameterCategory"), 0);
+        EXPECT_EQ(tsoil_config.number_keys_.at("parameterNumber"), 0);
+        EXPECT_EQ(tsoil_config.number_keys_.at("typeOfFirstFixedSurface"), 106);
+        EXPECT_EQ(tsoil_config.number_keys_.at("scaleFactorOfFirstFixedSurface"), 2);
+        EXPECT_EQ(tsoil_config.number_keys_.at("scaledValueOfFirstFixedSurface"), 0);
+        EXPECT_EQ(tsoil_config.number_keys_.at("typeOfSecondFixedSurface"), 106);
+        EXPECT_EQ(tsoil_config.number_keys_.at("scaleFactorOfSecondFixedSurface"), 2);
+        EXPECT_EQ(tsoil_config.number_keys_.at("scaledValueOfSecondFixedSurface"), 10);
     }
 
     TEST_F(ConvertConfigTest, MethodFindParamConfig)

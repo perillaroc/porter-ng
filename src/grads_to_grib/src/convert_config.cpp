@@ -28,6 +28,16 @@ void ConvertConfig::parse(const string &config_file_path)
         param_config.name_ = param_name;
 //        cout<<param_name<<endl;
 
+        YAML::Node levels_node = param_node["levels"];
+        if(levels_node)
+        {
+            for (std::size_t i=0;i<levels_node.size();i++)
+            {
+                auto level = levels_node[i].as<double>();
+                param_config.levels_.push_back(level);
+            }
+        }
+
         YAML::Node keys_node = param_node["keys"];
         for(YAML::const_iterator key_iter=keys_node.begin(); key_iter != keys_node.end(); key_iter++)
         {
@@ -45,7 +55,6 @@ void ConvertConfig::parse(const string &config_file_path)
         }
         param_configs_.push_back(param_config);
     }
-    return;
 }
 
 vector<ParamConfig>::iterator

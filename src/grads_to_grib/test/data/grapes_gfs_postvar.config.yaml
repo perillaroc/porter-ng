@@ -22,23 +22,39 @@ params:
       typeOfLevel: isobaricInPa
 
   -
-      name: t
-      keys:
-        # param
-        discipline: 0
-        parameterCategory: 0
-        parameterNumber: 0
-
-        # level
-        typeOfLevel: isobaricInPa
+    name: t
+    keys:
+      # param
+      discipline: 0
+      parameterCategory: 0
+      parameterNumber: 0
+      # level
+      typeOfLevel: isobaricInPa
 
   -
-        name: h
-        keys:
-          # param
-          discipline: 0
-          parameterCategory: 3
-          parameterNumber: 5
+    name: h
+    keys:
+      # param
+      discipline: 0
+      parameterCategory: 3
+      parameterNumber: 5
+      # level
+      typeOfLevel: isobaricInPa
 
-          # level
-          typeOfLevel: isobaricInPa
+  -
+    name: tsoil
+    levels: [1000.0]
+    keys:
+      # param
+      discipline: 0
+      parameterCategory: 0
+      parameterNumber: 0
+
+      # level
+      # typeOfLevel: depthBelowLandLayer
+      typeOfFirstFixedSurface: 106
+      scaleFactorOfFirstFixedSurface: 2
+      scaledValueOfFirstFixedSurface: 0
+      typeOfSecondFixedSurface: 106
+      scaleFactorOfSecondFixedSurface: 2
+      scaledValueOfSecondFixedSurface: 10
