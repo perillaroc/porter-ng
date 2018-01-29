@@ -163,6 +163,7 @@ void GradsToGribConverter::convertMessage(
         auto key_name = key.first;
         codes_set_long(handle, key_name.c_str(), key.second);
     }
+
     for(auto key: param_config.string_keys_)
     {
         auto key_name = key.first;
@@ -171,17 +172,14 @@ void GradsToGribConverter::convertMessage(
     }
 
     // set parameter's level
-    if(param_config.string_keys_.find("typeOfLevel") != end(param_config.string_keys_))
+    if(!param_config.isLevelSet())
     {
         auto type_of_level = param_config.string_keys_.at("typeOfLevel");
         if(type_of_level == "isobaricInPa")
         {
             level *= 100;
         }
-    }
 
-    if(param_config.number_keys_.find("level") == end(param_config.number_keys_))
-    {
         codes_set_long(handle, "level", long(level));
     }
 

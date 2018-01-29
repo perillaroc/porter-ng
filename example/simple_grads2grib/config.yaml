@@ -1,14 +1,33 @@
 params:
-  -
-     name: u
-     keys:
-       # param
-       discipline: 0
-       parameterCategory: 2
-       parameterNumber: 2
+#  -
+#    name: u
+#    levels: [1000, 962.5]
+#    keys:
+#      # param
+#      discipline: 0
+#      parameterCategory: 2
+#      parameterNumber: 2
+#
+#      # level
+#      typeOfLevel: isobaricInPa
 
-       # level
-       typeOfLevel: isobaricInPa
+  -
+    name: tsoil
+    levels: [1000.0]
+    keys:
+      # param
+      discipline: 0
+      parameterCategory: 0
+      parameterNumber: 0
+
+      # level
+      # typeOfLevel: depthBelowLandLayer
+      typeOfFirstFixedSurface: 106
+      scaleFactorOfFirstFixedSurface: 2
+      scaledValueOfFirstFixedSurface: 0
+      typeOfSecondFixedSurface: 106
+      scaleFactorOfSecondFixedSurface: 2
+      scaledValueOfSecondFixedSurface: 10
 
 #  -
 #    name: v

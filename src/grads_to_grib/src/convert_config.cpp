@@ -9,6 +9,23 @@
 using namespace std;
 using namespace GradsToGrib;
 
+
+bool ParamConfig::isLevelSet() const
+{
+    if(number_keys_.find("level") != end(number_keys_))
+    {
+        return true;
+    }
+
+    if(number_keys_.find("scaledValueOfFirstFixedSurface") != end(number_keys_))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+
 ConvertConfig::ConvertConfig()
 {
 

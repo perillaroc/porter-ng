@@ -8,6 +8,8 @@ namespace GradsToGrib
 {
     struct ParamConfig
     {
+        bool isLevelSet() const;
+
         std::string name_;
 
         std::vector<double> levels_;

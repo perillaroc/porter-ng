@@ -40,6 +40,8 @@ namespace {
 
         EXPECT_EQ(u_config.string_keys_.at("typeOfLevel"), "isobaricInPa");
 
+        EXPECT_FALSE(u_config.isLevelSet());
+
         ParamConfig v_config = param_configs[1];
         EXPECT_EQ(v_config.name_, "v");
         EXPECT_EQ(v_config.number_keys_.at("discipline"), 0);
@@ -47,6 +49,8 @@ namespace {
         EXPECT_EQ(v_config.number_keys_.at("parameterNumber"), 3);
 
         EXPECT_EQ(v_config.string_keys_.at("typeOfLevel"), "isobaricInPa");
+
+        EXPECT_FALSE(v_config.isLevelSet());
 
         ParamConfig tsoil_config = param_configs[4];
         EXPECT_EQ(tsoil_config.name_, "tsoil");
@@ -63,6 +67,8 @@ namespace {
         EXPECT_EQ(tsoil_config.number_keys_.at("typeOfSecondFixedSurface"), 106);
         EXPECT_EQ(tsoil_config.number_keys_.at("scaleFactorOfSecondFixedSurface"), 2);
         EXPECT_EQ(tsoil_config.number_keys_.at("scaledValueOfSecondFixedSurface"), 10);
+
+        EXPECT_TRUE(tsoil_config.isLevelSet());
     }
 
     TEST_F(ConvertConfigTest, MethodFindParamConfig)
