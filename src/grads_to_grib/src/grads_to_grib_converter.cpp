@@ -158,18 +158,41 @@ void GradsToGribConverter::convertMessage(
     codes_set_long(handle, "indicatorOfUnitOfTimeRange", 1);
     codes_set_long(handle, "forecastTime", forecast_hour);
 
-    for(auto key: param_config.number_keys_)
+    map<string, string>::const_iterator string_key;
+    map<string, long>::const_iterator long_key;
+    for(auto key_item: param_config.keys_list_)
     {
-        auto key_name = key.first;
-        codes_set_long(handle, key_name.c_str(), key.second);
+        auto key_name = key_item.first;
+        auto key_type = key_item.second;
+        switch(key_type)
+        {
+            case ConfigKeyType::String:
+                string_key = param_config.string_keys_.find(key_name);
+                codes_get_size(handle, key_name.c_str(), &size);
+                cout<<key_name<<": "<<string_key->second<<endl;
+                codes_set_string(handle, key_name.c_str(), string_key->second.c_str(), &size);
+                break;
+
+            case ConfigKeyType::Long:
+                long_key = param_config.number_keys_.find(key_name);
+                cout<<key_name<<": "<<long_key->second<<endl;
+                codes_set_long(handle, key_name.c_str(), long_key->second);
+                break;
+        }
     }
 
-    for(auto key: param_config.string_keys_)
-    {
-        auto key_name = key.first;
-        codes_get_size(handle, key_name.c_str(), &size);
-        codes_set_string(handle, key_name.c_str(), key.second.c_str(), &size);
-    }
+//    for(auto key: param_config.number_keys_)
+//    {
+//        auto key_name = key.first;
+//        codes_set_long(handle, key_name.c_str(), key.second);
+//    }
+//
+//    for(auto key: param_config.string_keys_)
+//    {
+//        auto key_name = key.first;
+//        codes_get_size(handle, key_name.c_str(), &size);
+//        codes_set_string(handle, key_name.c_str(), key.second.c_str(), &size);
+//    }
 
     // set parameter's level
     if(!param_config.isLevelSet())

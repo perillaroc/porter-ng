@@ -6,14 +6,22 @@
 
 namespace GradsToGrib
 {
+    enum class ConfigKeyType
+    {
+        Long,
+        String
+    };
+
     struct ParamConfig
     {
+
         bool isLevelSet() const;
 
         std::string name_;
 
         std::vector<double> levels_;
 
+        std::vector<std::pair<std::string, ConfigKeyType>> keys_list_;
         std::map<std::string, long> number_keys_;
         std::map<std::string, std::string> string_keys_;
     };

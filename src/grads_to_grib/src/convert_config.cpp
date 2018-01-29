@@ -62,12 +62,14 @@ void ConvertConfig::parse(const string &config_file_path)
             auto key_value = key_iter->second.as<string>();
             try {
                 auto value_number = boost::lexical_cast<long>(key_value);
-//                cout<<key_name<<" [long] "<<value_number<<endl;
+                // cout<<key_name<<" [long] "<<value_number<<endl;
                 param_config.number_keys_[key_name] = value_number;
+                param_config.keys_list_.emplace_back(make_pair(key_name, ConfigKeyType::Long));
             }
             catch (boost::bad_lexical_cast &b) {
-//                cout<<key_name<<" [string] "<<key_value<<endl;
+                // cout<<key_name<<" [string] "<<key_value<<endl;
                 param_config.string_keys_[key_name] = key_value;
+                param_config.keys_list_.emplace_back(make_pair(key_name, ConfigKeyType::String));
             }
         }
         param_configs_.push_back(param_config);

@@ -21,10 +21,11 @@ params:
       parameterNumber: 0
 
       # level
-      # typeOfLevel: depthBelowLandLayer
+      typeOfLevel: depthBelowLandLayer
       typeOfFirstFixedSurface: 106
       scaleFactorOfFirstFixedSurface: 2
       scaledValueOfFirstFixedSurface: 0
+
       typeOfSecondFixedSurface: 106
       scaleFactorOfSecondFixedSurface: 2
       scaledValueOfSecondFixedSurface: 10
