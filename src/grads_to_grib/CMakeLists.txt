@@ -31,6 +31,7 @@ endif()
 
 # include dir
 include_directories(${YAMLCPP_INCLUDE_DIR})
+include_directories(${ECCODES_INCLUDE_DIR})
 
 # lib
 set(SOURCE_FILES
