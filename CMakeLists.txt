@@ -2,23 +2,9 @@ cmake_minimum_required(VERSION 2.8.4)
 
 set(CMAKE_CXX_STANDARD 11)
 
-if(ECCODES_INSTALL_PREFIX)
-    set(ECCODES_INCLUDE_HINTS ${ECCODES_INSTALL_PREFIX}/include)
-    set(ECCODES_LIBRARY_HINTS ${ECCODES_INSTALL_PREFIX}/lib)
-endif()
+SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-find_path(
-        ECCODES_INCLUDE_DIR eccodes.h
-        HINTS /usr/include /usr/local/include ${ECCODES_INCLUDE_HINTS}
-        NO_DEFAULT_PATH
-)
-
-find_library(
-        ECCODES_LIBRARY
-        eccodes
-        /usr/lib  /usr/local/lib ${ECCODES_LIBRARY_HINTS} ${ECCODES_LIBRARY_DIR}
-        NO_DEFAULT_PATH
-)
+find_package(ECCODES REQUIRED)
 
 set(PORTER_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}/src/grads_parser/src

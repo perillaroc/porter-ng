@@ -1,5 +1,7 @@
 project(porter)
 
+# set(Boost_USE_STATIC_LIBS ON)
+
 find_package(Boost
         REQUIRED
         COMPONENTS
@@ -17,3 +19,5 @@ set(SRC_LIST src/main.cpp)
 
 add_executable(porter ${SRC_LIST})
 target_link_libraries(porter grads_parser grads_to_grib ${ECCODES_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+
+install(TARGETS porter RUNTIME DESTINATION bin)
