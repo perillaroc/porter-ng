@@ -1,5 +1,14 @@
 include_directories(../src)
 
+set(TEST_DATA_ROOT ${PROJECT_SOURCE_DIR}/test/test_data)
+
+configure_file (
+        "${PROJECT_SOURCE_DIR}/test/test_config.h.in"
+        "${PROJECT_BINARY_DIR}/test/test_config.h"
+)
+include_directories("${PROJECT_BINARY_DIR}/test")
+
+
 function(porter_add_test TEST_NAME TEST_EXE TEST_SOURCE_FILES)
     add_executable(${TEST_EXE} ${TEST_SOURCE_FILES} )
     target_link_libraries(${TEST_EXE} grads_parser ${GTEST_BOTH_LIBRARIES} pthread)

@@ -3,6 +3,8 @@
 #include "grads_ctl_util.h"
 #include "grads_ctl_parser.h"
 
+#include "test_config.h"
+
 using namespace std;
 
 namespace {
@@ -12,7 +14,7 @@ namespace {
 
         GradsCtlUtilTest()
         {
-            test_ctl_file_path_ = "src/grads_parser/test/test_data/post.ctl_2018011912_000";
+            test_ctl_file_path_ = string(TEST_DATA_ROOT) + "/post.ctl_2018011912_000";
         }
 
         virtual ~GradsCtlUtilTest() {}

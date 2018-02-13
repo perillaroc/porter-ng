@@ -5,6 +5,8 @@
 
 #include "grads_ctl_parser.h"
 
+#include "test_config.h"
+
 using namespace std;
 
 namespace {
@@ -16,8 +18,8 @@ namespace {
         // is empty.
 
         GradsCtlParser() {
-            postvar_ctl_file_path_ = "src/grads_parser/test/test_data/post.ctl_2018011912_000";
-            modelvar_ctl_file_path_ = "src/grads_parser/test/test_data/model.ctl_2018012600_003";
+            postvar_ctl_file_path_ = string(TEST_DATA_ROOT) + "/post.ctl_2018011912_000";
+            modelvar_ctl_file_path_ = string(TEST_DATA_ROOT) + "/model.ctl_2018012600_003";
         }
 
         virtual ~GradsCtlParser() {}
@@ -37,7 +39,7 @@ namespace {
         auto grads_ctl = parser.getGradsCtl();
 
 
-        EXPECT_EQ(grads_ctl.data_file_path_, "src/grads_parser/test/test_data/postvar2018011912_000");
+        EXPECT_EQ(grads_ctl.data_file_path_, string(TEST_DATA_ROOT) + "/postvar2018011912_000");
         EXPECT_EQ(grads_ctl.title_, "post output from grapes");
         EXPECT_DOUBLE_EQ(grads_ctl.undefined_value_, -9999.0);
 
@@ -147,7 +149,7 @@ namespace {
         auto grads_ctl = parser.getGradsCtl();
 
 
-        EXPECT_EQ(grads_ctl.data_file_path_, "src/grads_parser/test/test_data/modelvar2018012600_003");
+        EXPECT_EQ(grads_ctl.data_file_path_, string(TEST_DATA_ROOT) + "/modelvar2018012600_003");
         EXPECT_EQ(grads_ctl.title_, "model output from grapes");
         EXPECT_DOUBLE_EQ(grads_ctl.undefined_value_, -9.99e33);
 
@@ -228,7 +230,7 @@ namespace {
     TEST_F(GradsCtlParser, MethodParseFileName)
     {
         GradsParser::GradsCtlParser parser;
-        parser.parse("src/grads_parser/test/test_data/post.ctl_2018011912_000");
+        parser.parse(string(TEST_DATA_ROOT) + "/post.ctl_2018011912_000");
         auto grads_ctl = parser.getGradsCtl();
 
         EXPECT_EQ(grads_ctl.forecast_time_, boost::posix_time::hours(0));
@@ -237,7 +239,7 @@ namespace {
                 boost::posix_time::time_duration(12, 0, 0)
         ));
 
-        parser.parse("src/grads_parser/test/test_data/model.ctl_2018012600_003");
+        parser.parse(string(TEST_DATA_ROOT) + "/model.ctl_2018012600_003");
         grads_ctl = parser.getGradsCtl();
 
         EXPECT_EQ(grads_ctl.forecast_time_, boost::posix_time::hours(3));
