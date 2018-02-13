@@ -1,29 +1,36 @@
 # porter-ng
 
 A simple data conversion tool which converts GrADS binary data to GRIB 2 data.
-It is currently tested on numerical weather prediction model's output 
+
+It is currently tested on numerical weather prediction model's output data
 produced by NWPC (Numerical Weather Prediction Center of CMA).
 
 ## Requirements
 
-porter-ng uses ecCodes by ECMWF to encode GRIB 2 data. 
-So please build and install ecCodes before building porter-ng.
+* [ecCodes](https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home)
 
-porter-ng uses some libraries of Boost C++ library to parse GrADS data description file 
-and command line arguments:
+    porter-ng uses ecCodes by ECMWF to encode GRIB 2 data. 
+    So please build and install ecCodes before building porter-ng.
 
-* system
-* file system
-* data time
-* program options
+* [Boost C++ libraries](http://www.boost.org/)
 
-porter-ng's config file is written in YAML. And yaml-cpp is used to parse YAML file.
+    porter-ng uses some libraries of Boost C++ libraries to parse GrADS data description file 
+    and command line arguments:
+
+    - system
+    - file system
+    - data time
+    - program options
+
+* [yaml-cpp](https://github.com/jbeder/yaml-cpp)
+
+    porter-ng's config file is written in YAML. And yaml-cpp is used to parse YAML file.
 
 ## Installation
 
-Use CMake to build from source code. Such as:
+Use CMake to build from source code.
 
-Some Cmake variable are available to set libraries' path.
+Some Cmake variables are available to help find required libraries. Such as:
 
 * `ECCODES_INSTALL_PREFIX`: ecCodes's install prefix, default is `/usr/local`.
 * `YAMLCPP_INSTALL_PREFIX`: yaml-cpp's install prefix, default is `/usr/local`.
@@ -43,15 +50,15 @@ A simple config file:
 ```yaml
 params:
   -
-      name: t
-      keys:
-        # param
-        discipline: 0
-        parameterCategory: 0
-        parameterNumber: 0
+    name: t
+    keys:
+      # param
+      discipline: 0
+      parameterCategory: 0
+      parameterNumber: 0
 
-        # level
-        typeOfLevel: isobaricInPa
+      # level
+      typeOfLevel: isobaricInPa
 
   -
     name: u
@@ -68,5 +75,6 @@ params:
 
 ## License
 
-This project is licensed under the MIT License.
+Copyright &copy; 2018, Perilla Roc.
 
+This project is licensed under [the MIT License](./LICENSE).
