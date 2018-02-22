@@ -3,6 +3,7 @@
 
 #include <gtest/gtest.h>
 
+#include "test_config.h"
 #include "grads_ctl_parser.h"
 #include "grads_data_handler.h"
 
@@ -33,7 +34,7 @@ namespace {
         {
             // Code here will be called immediately after the constructor (right
             // before each test).
-            test_ctl_file_path_ = "dist/data/post.ctl_2018012400_000";
+            test_ctl_file_path_ = string(TEST_DATA_ROOT) + "/sample/meso_postvar_sample.ctl";
         }
 
         virtual void TearDown()
@@ -56,19 +57,19 @@ namespace {
         GradsParser::GradsDataHandler handler{grads_ctl};
         handler.openDataFile();
 
-        int index = 29;
+        int index = 3;
         auto record_handler = handler.loadByIndex(index);
 
         auto variable = record_handler->variable();
-        EXPECT_EQ(variable.name_, "v");
+        EXPECT_EQ(variable.name_, "h");
         EXPECT_DOUBLE_EQ(variable.level_, 1000.0);
 
-        index=60;
+        index=1;
         record_handler = handler.loadByIndex(index);
 
         variable = record_handler->variable();
         EXPECT_EQ(variable.name_, "t");
-        EXPECT_DOUBLE_EQ(variable.level_, 925.0);
+        EXPECT_DOUBLE_EQ(variable.level_, 975.0);
 
         // non-exists index
         index=6000;

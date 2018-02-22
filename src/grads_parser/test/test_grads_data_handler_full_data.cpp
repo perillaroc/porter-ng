@@ -4,6 +4,7 @@
 
 #include <gtest/gtest.h>
 
+#include "test_config.h"
 #include "grads_ctl_parser.h"
 #include "grads_data_handler.h"
 
@@ -35,7 +36,7 @@ namespace {
         {
             // Code here will be called immediately after the constructor (right
             // before each test).
-            test_ctl_file_path_ = "dist/data/post.ctl_2018012400_000";
+            test_ctl_file_path_ = string(TEST_DATA_ROOT) + "/sample/meso_postvar_sample.ctl";
         }
 
         virtual void TearDown()
@@ -71,7 +72,7 @@ namespace {
 
             auto values = record_handler->values();
 
-            EXPECT_EQ(values.size(), 1036800);
+            EXPECT_EQ(values.size(), 376251);
 
             record_handler.reset();
 

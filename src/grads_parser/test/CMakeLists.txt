@@ -1,6 +1,6 @@
 include_directories(../src)
 
-set(TEST_DATA_ROOT ${PROJECT_SOURCE_DIR}/test/test_data)
+set(TEST_DATA_ROOT ${PORTER_TEST_DATA_DIR})
 
 configure_file (
         "${PROJECT_SOURCE_DIR}/test/test_config.h.in"

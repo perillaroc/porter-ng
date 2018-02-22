@@ -14,7 +14,7 @@ namespace {
 
         GradsCtlUtilTest()
         {
-            test_ctl_file_path_ = string(TEST_DATA_ROOT) + "/post.ctl_2018011912_000";
+            test_ctl_file_path_ = string(TEST_DATA_ROOT) + "/ctl/gfs/post.ctl_2018011912_000";
         }
 
         virtual ~GradsCtlUtilTest() {}

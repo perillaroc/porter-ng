@@ -11,6 +11,8 @@ set(PORTER_INCLUDE_DIRS
         ${CMAKE_CURRENT_BINARY_DIR}/src/grads_parser/src
         ${CMAKE_CURRENT_SOURCE_DIR}/src/grads_to_grib/src
         )
+set(PORTER_TEST_DATA_DIR
+        ${CMAKE_CURRENT_SOURCE_DIR}/data)
 
 add_subdirectory(src)
 add_subdirectory(example)
