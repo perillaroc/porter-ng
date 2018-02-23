@@ -72,6 +72,8 @@ namespace GradsParser
         std::string title_;
         double undefined_value_ = 9999;
 
+        bool is_sequential_ = false;
+
 #if defined(PORTER_BIG_ENDIAN)
         DataEndian data_endian_ = DataEndian::BigEndian;
         DataEndian local_endian_ = DataEndian::BigEndian;

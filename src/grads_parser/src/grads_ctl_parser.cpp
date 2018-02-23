@@ -43,6 +43,10 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
             {
                 parseDataSet(tokens);
             }
+            else if(first_word == "options")
+            {
+                parseOptions(tokens);
+            }
             else if(first_word == "title")
             {
                 auto title = alg::trim_copy(cur_line.substr(first_word.length()));
@@ -97,6 +101,31 @@ void GradsCtlParser::parseDataSet(vector<string> &tokens) {
     }
     grads_ctl_.data_file_path_ = data_file_path;
 }
+
+
+void GradsCtlParser::parseOptions(vector<string> &tokens) {
+    vector<string> sub_tokens{tokens.begin() + 1, tokens.end()};
+    for(auto token: sub_tokens)
+    {
+        if(token == "sequential")
+        {
+            grads_ctl_.is_sequential_ = true;
+        }
+        else if(token == "big_endian")
+        {
+            grads_ctl_.data_endian_ = DataEndian::BigEndian;
+        }
+        else if(token == "little_endian")
+        {
+            grads_ctl_.data_endian_ = DataEndian::LittleEndian;
+        }
+        else
+        {
+            cout<<"[GradsCtlParser::parseOptions] unknown options:"<<token<<endl;
+        }
+    }
+}
+
 
 void GradsCtlParser::parseDimension(std::string dimension_name, std::vector<std::string> &tokens) {
     auto count = boost::lexical_cast<unsigned int>(tokens[1]);
@@ -349,3 +378,4 @@ void GradsCtlParser::generateTimeForGrapes(
     auto forecast_hour = boost::lexical_cast<int>(forecast_hour_string);
     grads_ctl_.forecast_time_ = boost::posix_time::hours(forecast_hour);
 }
+

@@ -40,6 +40,9 @@ namespace {
 
 
         EXPECT_EQ(grads_ctl.data_file_path_, string(TEST_DATA_ROOT) + "/ctl/gfs/postvar2018011912_000");
+
+        EXPECT_FALSE(grads_ctl.is_sequential_);
+
         EXPECT_EQ(grads_ctl.title_, "post output from grapes");
         EXPECT_DOUBLE_EQ(grads_ctl.undefined_value_, -9999.0);
 
@@ -148,8 +151,11 @@ namespace {
         parser.parse(modelvar_ctl_file_path_);
         auto grads_ctl = parser.getGradsCtl();
 
-
         EXPECT_EQ(grads_ctl.data_file_path_, string(TEST_DATA_ROOT) + "/ctl/gfs/modelvar2018012600_003");
+
+        EXPECT_FALSE(grads_ctl.is_sequential_);
+        EXPECT_EQ(grads_ctl.data_endian_, GradsParser::DataEndian::BigEndian);
+
         EXPECT_EQ(grads_ctl.title_, "model output from grapes");
         EXPECT_DOUBLE_EQ(grads_ctl.undefined_value_, -9.99e33);
 
@@ -224,7 +230,18 @@ namespace {
         auto local_endian = GradsParser::DataEndian::BigEndian;
 #endif
         EXPECT_EQ(grads_ctl.local_endian_, local_endian);
-        EXPECT_EQ(grads_ctl.data_endian_, local_endian);
+    }
+
+    TEST_F(GradsCtlParser, TestMesoPostVarParse) {
+        string meso_post_var_file_path = string(TEST_DATA_ROOT) + "/ctl/meso/post.ctl_201802120000000";
+        GradsParser::GradsCtlParser parser;
+        parser.parse(meso_post_var_file_path);
+        auto grads_ctl = parser.getGradsCtl();
+
+        EXPECT_EQ(grads_ctl.data_file_path_, string(TEST_DATA_ROOT) + "/ctl/meso/postvar201802120000000");
+
+        EXPECT_TRUE(grads_ctl.is_sequential_);
+        EXPECT_EQ(grads_ctl.data_endian_, GradsParser::DataEndian::BigEndian);
     }
 
     TEST_F(GradsCtlParser, MethodParseFileName)

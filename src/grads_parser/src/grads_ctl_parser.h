@@ -17,6 +17,8 @@ namespace GradsParser {
 
         void parseDataSet(std::vector<std::string> &tokens);
 
+        void parseOptions(std::vector<std::string> &tokens);
+
         void parseDimension(std::string dimension_name, std::vector<std::string> &tokens);
 
         void parseTimeDimension(std::vector<std::string> &tokens);
