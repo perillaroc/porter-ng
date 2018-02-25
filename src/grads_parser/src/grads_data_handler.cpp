@@ -1,7 +1,5 @@
 #include "grads_data_handler.h"
 
-#include <algorithm>
-
 using namespace GradsParser;
 using namespace std;
 
@@ -52,7 +50,12 @@ std::shared_ptr<GradsMessagedHandler> GradsDataHandler::loadByIndex(int index)
     auto number_of_y = grads_ctl_.y_def_.count_;
     auto total_number = number_of_x * number_of_y;
 
-    auto offset = total_number * index * 4;
+    auto offset =  4 * total_number * index;
+
+    if(grads_ctl_.is_sequential_)
+    {
+        offset += 4 * 2 * index + 4;
+    }
 
     data_file_stream_->seekg(offset);
 

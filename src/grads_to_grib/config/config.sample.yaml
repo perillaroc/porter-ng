@@ -1,0 +1,14 @@
+# this is a sample config file for GradsToGrib.
+
+params:
+  -
+    name: t
+    levels: [1000, 975]
+    keys:
+      # param
+      discipline: 0
+      parameterCategory: 0
+      parameterNumber: 0
+
+      # level
+      typeOfLevel: isobaricInPa
