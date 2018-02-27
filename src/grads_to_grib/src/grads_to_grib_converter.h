@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "convert_config.h"
+#include <grads_ctl.h>
 
 namespace GradsParser
 {
@@ -24,6 +25,8 @@ namespace GradsToGrib {
         void convert();
 
     private:
+        GradsParser::GradsCtl getGradsCtl();
+
         void convertMessage(std::shared_ptr<GradsParser::GradsMessagedHandler> message_handler,
                             const ParamConfig &param_config, int message_count);
 

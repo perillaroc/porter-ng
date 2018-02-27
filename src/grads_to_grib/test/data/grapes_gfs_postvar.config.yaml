@@ -1,3 +1,9 @@
+grads_ctl:
+  props:
+    start_time: 2018021200
+    forecast_time: 000
+    data_endian: big_endian
+
 params:
   -
     name: u

@@ -35,10 +35,7 @@ void GradsToGribConverter::setOutputFilePath(const string &output_file_path)
 
 void GradsToGribConverter::convert()
 {
-    GradsCtlParser parser;
-    parser.parse(ctl_file_path_);
-    auto grads_ctl = parser.getGradsCtl();
-    grads_ctl.data_endian_ = DataEndian::BigEndian;
+    auto grads_ctl = getGradsCtl();
     auto &var_info_list = grads_ctl.var_infos_;
 
     GradsDataHandler data_handler{grads_ctl};
@@ -73,6 +70,14 @@ void GradsToGribConverter::convert()
         message_count++;
     }
 
+}
+
+GradsParser::GradsCtl GradsToGribConverter::getGradsCtl() {
+    GradsCtlParser parser;
+    parser.parse(ctl_file_path_);
+    auto grads_ctl = parser.getGradsCtl();
+    grads_ctl.data_endian_ = DataEndian::BigEndian;
+    return grads_ctl;
 }
 
 void GradsToGribConverter::convertMessage(

@@ -1,5 +1,18 @@
 # this is a sample config file for GradsToGrib.
 
+#common:
+#  keys:
+#    dataDate: 20180212  # YYYYMMDD
+#    dataTime: 0         # Hour
+#    indicatorOfUnitOfTimeRange: 1
+#    forecastTime: 0     # Start Hour
+
+grads_ctl:
+  props:
+    start_time: 2018021200
+    forecast_time: 000
+    data_endian: big_endian
+
 params:
   -
     name: t

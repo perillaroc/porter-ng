@@ -69,6 +69,17 @@ namespace {
         EXPECT_EQ(tsoil_config.number_keys_.at("scaledValueOfSecondFixedSurface"), 10);
 
         EXPECT_TRUE(tsoil_config.isLevelSet());
+
+        auto props_config = convert_config.gradsCtlPropsConfig();
+        EXPECT_EQ(props_config.size(), 3);
+        EXPECT_NE(props_config.find("start_time"), props_config.end());
+        EXPECT_EQ(props_config["start_time"], "2018021200");
+        EXPECT_NE(props_config.find("forecast_time"), props_config.end());
+        EXPECT_EQ(props_config["forecast_time"], "000");
+        EXPECT_NE(props_config.find("data_endian"), props_config.end());
+        EXPECT_EQ(props_config["data_endian"], "big_endian");
+
+        EXPECT_EQ(props_config.find("NONE_KEY"), props_config.end());
     }
 
     TEST_F(ConvertConfigTest, MethodFindParamConfig)

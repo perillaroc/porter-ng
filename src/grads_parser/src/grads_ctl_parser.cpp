@@ -78,6 +78,25 @@ void GradsCtlParser::parse(const std::string &ctl_file_path) {
     parseFileName();
 }
 
+
+void GradsCtlParser::generateTimeForGrapes(
+        const std::string &start_hour_string,
+        const std::string &forecast_hour_string)
+{
+    auto year = boost::lexical_cast<int>(start_hour_string.substr(0, 4));
+    auto month = boost::lexical_cast<int>(start_hour_string.substr(4, 2));
+    auto day = boost::lexical_cast<int>(start_hour_string.substr(6, 2));
+    auto hour = boost::lexical_cast<int>(start_hour_string.substr(8));
+    grads_ctl_.start_time_ = boost::posix_time::ptime(
+            boost::gregorian::date(year, month, day),
+            boost::posix_time::time_duration(hour, 0, 0)
+    );
+
+    auto forecast_hour = boost::lexical_cast<int>(forecast_hour_string);
+    grads_ctl_.forecast_time_ = boost::posix_time::hours(forecast_hour);
+}
+
+
 void GradsCtlParser::loadCtlFileLines()
 {
     ctl_file_lines_.clear();
@@ -361,21 +380,3 @@ void GradsCtlParser::parseFileName()
         }
     }
 }
-
-void GradsCtlParser::generateTimeForGrapes(
-        const std::string &start_hour_string,
-        const std::string &forecast_hour_string)
-{
-    auto year = boost::lexical_cast<int>(start_hour_string.substr(0, 4));
-    auto month = boost::lexical_cast<int>(start_hour_string.substr(4, 2));
-    auto day = boost::lexical_cast<int>(start_hour_string.substr(6, 2));
-    auto hour = boost::lexical_cast<int>(start_hour_string.substr(8));
-    grads_ctl_.start_time_ = boost::posix_time::ptime(
-            boost::gregorian::date(year, month, day),
-            boost::posix_time::time_duration(hour, 0, 0)
-    );
-
-    auto forecast_hour = boost::lexical_cast<int>(forecast_hour_string);
-    grads_ctl_.forecast_time_ = boost::posix_time::hours(forecast_hour);
-}
-

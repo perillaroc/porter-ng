@@ -4,6 +4,8 @@
 #include <map>
 #include <vector>
 
+#include <yaml-cpp/yaml.h>
+
 namespace GradsToGrib
 {
     enum class ConfigKeyType
@@ -32,6 +34,7 @@ namespace GradsToGrib
         ConvertConfig();
 
         std::vector<ParamConfig>& paramConfigs() { return param_configs_; }
+        std::map<std::string, std::string>& gradsCtlPropsConfig() { return grads_ctl_props_; }
 
         void parse(const std::string &config_file_path);
 
@@ -40,9 +43,13 @@ namespace GradsToGrib
                 double *level = nullptr);
 
     private:
+        void parseParams(YAML::Node &params_node);
+        void parseGradsCtl(YAML::Node &grads_ctl_node);
+
         std::string config_file_path_;
 
         std::vector<ParamConfig> param_configs_;
+        std::map<std::string, std::string> grads_ctl_props_;
     };
 }
 
