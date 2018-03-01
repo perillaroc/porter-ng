@@ -33,6 +33,8 @@ namespace GradsToGrib {
         std::string convert_config_file_path_;
         std::string ctl_file_path_;
         std::string output_file_path_;
+
+        ConvertConfig convert_config_;
     };
 
 }

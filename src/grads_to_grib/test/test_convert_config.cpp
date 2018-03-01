@@ -74,8 +74,8 @@ namespace {
         EXPECT_EQ(props_config.size(), 3);
         EXPECT_NE(props_config.find("start_time"), props_config.end());
         EXPECT_EQ(props_config["start_time"], "2018021200");
-        EXPECT_NE(props_config.find("forecast_time"), props_config.end());
-        EXPECT_EQ(props_config["forecast_time"], "000");
+        EXPECT_NE(props_config.find("forecast_hour"), props_config.end());
+        EXPECT_EQ(props_config["forecast_hour"], "000");
         EXPECT_NE(props_config.find("data_endian"), props_config.end());
         EXPECT_EQ(props_config["data_endian"], "big_endian");
 

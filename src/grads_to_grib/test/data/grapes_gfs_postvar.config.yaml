@@ -1,7 +1,7 @@
 grads_ctl:
   props:
     start_time: 2018021200
-    forecast_time: 000
+    forecast_hour: 000
     data_endian: big_endian
 
 params:

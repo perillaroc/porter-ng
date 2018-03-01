@@ -113,7 +113,7 @@ void ConvertConfig::parseParams(YAML::Node &params_node) {
 }
 
 void ConvertConfig::parseGradsCtl(YAML::Node &grads_ctl_node) {
-    YAML::Node props_node = grads_ctl_node["levels"];
+    YAML::Node props_node = grads_ctl_node["props"];
     if(props_node)
     {
         for(YAML::const_iterator key_iter=props_node.begin(); key_iter != props_node.end(); key_iter++)

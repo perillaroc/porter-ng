@@ -35,22 +35,25 @@ void GradsToGribConverter::setOutputFilePath(const string &output_file_path)
 
 void GradsToGribConverter::convert()
 {
+    convert_config_.parse(convert_config_file_path_);
+
     auto grads_ctl = getGradsCtl();
+    cout<<grads_ctl.start_time_<<endl;
+    cout<<grads_ctl.forecast_time_<<endl;
     auto &var_info_list = grads_ctl.var_infos_;
 
     GradsDataHandler data_handler{grads_ctl};
     data_handler.openDataFile();
 
-    ConvertConfig convert_config;
-    convert_config.parse(convert_config_file_path_);
-    auto &param_configs = convert_config.paramConfigs();
+
+    auto &param_configs = convert_config_.paramConfigs();
 
     int message_count = 0;
     for(auto &var_info: var_info_list)
     {
         auto var_name = var_info.name_;
         auto level = var_info.level_;
-        auto result = convert_config.findParamConfig(var_name, &level);
+        auto result = convert_config_.findParamConfig(var_name, &level);
         if(result == std::end(param_configs))
         {
             cout<<"NOT FOUND: var "<<var_name<<" at level "<<level<<endl;
@@ -75,8 +78,22 @@ void GradsToGribConverter::convert()
 GradsParser::GradsCtl GradsToGribConverter::getGradsCtl() {
     GradsCtlParser parser;
     parser.parse(ctl_file_path_);
+
+    map<string, string> props_config = convert_config_.gradsCtlPropsConfig();
+
+    if((props_config.find("start_time")!=props_config.end())
+       && (props_config.find("forecast_hour")!=props_config.end()) ) {
+        auto start_time_string = props_config["start_time"];
+        auto forecast_hour_string = props_config["forecast_hour"];
+        parser.generateTimeForGrapes(start_time_string, forecast_hour_string);
+    }
+
+    if(props_config.find("data_endian")!=props_config.end()) {
+        auto data_endian = props_config["data_endian"];
+        parser.parseDataEndian(data_endian);
+    }
+
     auto grads_ctl = parser.getGradsCtl();
-    grads_ctl.data_endian_ = DataEndian::BigEndian;
     return grads_ctl;
 }
 
@@ -186,19 +203,6 @@ void GradsToGribConverter::convertMessage(
         }
     }
 
-//    for(auto key: param_config.number_keys_)
-//    {
-//        auto key_name = key.first;
-//        codes_set_long(handle, key_name.c_str(), key.second);
-//    }
-//
-//    for(auto key: param_config.string_keys_)
-//    {
-//        auto key_name = key.first;
-//        codes_get_size(handle, key_name.c_str(), &size);
-//        codes_set_string(handle, key_name.c_str(), key.second.c_str(), &size);
-//    }
-
     // set parameter's level
     if(!param_config.isLevelSet())
     {
@@ -217,11 +221,14 @@ void GradsToGribConverter::convertMessage(
 
     // section 7
     std::vector<double> double_values(values.begin(), values.end());
-    if(message_handler->variable().name_ == "t")
-    {
-        std::transform(begin(double_values), end(double_values), begin(double_values),
-                       [](double t) -> double { return t + 273.15; });
-    }
+
+    // TODO: use an expression to set variable calculation.
+//    if(message_handler->variable().name_ == "t")
+//    {
+//        std::transform(begin(double_values), end(double_values), begin(double_values),
+//                       [](double t) -> double { return t + 273.15; });
+//    }
+
     double *value_array = &double_values[0];
     codes_set_double_array(handle, "values", value_array, values.size());
 
