@@ -12,7 +12,9 @@ namespace GradsParser {
 
         GradsCtl& getGradsCtl() { return grads_ctl_; }
 
-        void generateTimeForGrapes(const std::string &start_hour_string, const std::string &forecast_hour_string);
+        void generateTimeForGrapes(const std::string &start_time_string, const std::string &forecast_hour_string);
+
+        void parseDataEndian(const std::string &endian_string);
 
     private:
         void loadCtlFileLines();

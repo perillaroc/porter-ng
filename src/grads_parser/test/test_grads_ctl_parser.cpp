@@ -266,6 +266,33 @@ namespace {
         ));
     }
 
+    TEST_F(GradsCtlParser, MethodGenerateTimeForGrapes) {
+        string start_time_string = "2018011912";
+        string forecast_hour_string = "000";
+
+        GradsParser::GradsCtlParser parser;
+        parser.generateTimeForGrapes(start_time_string, forecast_hour_string);
+
+        auto grads_ctl = parser.getGradsCtl();
+        EXPECT_EQ(grads_ctl.forecast_time_, boost::posix_time::hours(0));
+        EXPECT_EQ(grads_ctl.start_time_, boost::posix_time::ptime(
+                boost::gregorian::date(2018, 1, 19),
+                boost::posix_time::time_duration(12, 0, 0)
+        ));
+    }
+
+    TEST_F(GradsCtlParser, MethodParseDataEndian){
+        GradsParser::GradsCtlParser parser;
+        parser.parseDataEndian("big_endian");
+
+        auto grads_ctl = parser.getGradsCtl();
+        EXPECT_EQ(grads_ctl.data_endian_, GradsParser::DataEndian::BigEndian);
+
+        parser.parseDataEndian("little_endian");
+        grads_ctl = parser.getGradsCtl();
+        EXPECT_EQ(grads_ctl.data_endian_, GradsParser::DataEndian::LittleEndian);
+    }
+
 }  // namespace
 
 int main(int argc, char **argv) {
