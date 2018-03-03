@@ -20,12 +20,7 @@ namespace GradsToGrib
     {
 
         bool isLevelSet() const;
-        template <typename T> T calculateValue(T orig_value) {
-            value_parser_->DefineVar("x", &orig_value);
-            T result = value_parser_->Eval();
-            value_parser_->RemoveVar("x");
-            return result;
-        }
+        void calculateValues(std::vector<double> &values);
 
         std::string name_;
 
@@ -41,7 +36,7 @@ namespace GradsToGrib
 
     class ConvertConfig {
     public:
-        ConvertConfig();
+        ConvertConfig() = default;
 
         std::vector<ParamConfig>& paramConfigs() { return param_configs_; }
         std::map<std::string, std::string>& gradsCtlPropsConfig() { return grads_ctl_props_; }

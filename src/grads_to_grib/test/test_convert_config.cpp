@@ -10,9 +10,7 @@ namespace {
     class ConvertConfigTest : public ::testing::Test {
     protected:
 
-        ConvertConfigTest()
-        {
-        }
+        ConvertConfigTest() {}
 
         virtual ~ConvertConfigTest() {}
 
@@ -60,7 +58,9 @@ namespace {
         EXPECT_EQ(t_config.string_keys_.at("typeOfLevel"), "isobaricInPa");
         EXPECT_FALSE(t_config.isLevelSet());
 
-        EXPECT_DOUBLE_EQ(t_config.calculateValue(0.0), 0.0 + 273.15);
+        std::vector<double> values{0.0};
+        t_config.calculateValues(values);
+        EXPECT_DOUBLE_EQ(values[0], 0.0 + 273.15);
 
         ParamConfig tsoil_config = param_configs[4];
         EXPECT_EQ(tsoil_config.name_, "tsoil");

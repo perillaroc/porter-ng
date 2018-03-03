@@ -24,9 +24,15 @@ bool ParamConfig::isLevelSet() const
     return false;
 }
 
-ConvertConfig::ConvertConfig()
-{
-
+void ParamConfig::calculateValues(std::vector<double> &values) {
+    double value = 0.0;
+    value_parser_->DefineVar("x", &value);
+    std::transform(values.begin(), values.end(), values.begin(),
+                   [&](double v){
+                       value = v;
+                       double result = value_parser_->Eval();
+                       return result;
+                   });
 }
 
 void ConvertConfig::parse(const string &config_file_path)
@@ -113,7 +119,7 @@ void ConvertConfig::parseParams(YAML::Node &params_node) {
         {
             string value_expr = value_node.as<string>();
             auto value_parser = make_shared<mu::Parser>();
-            value_parser-> SetExpr(value_expr);
+            value_parser->SetExpr(value_expr);
             param_config.value_parser_ = value_parser;
         }
 

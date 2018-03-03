@@ -14,10 +14,6 @@ using namespace std;
 using namespace GradsToGrib;
 using namespace GradsParser;
 
-GradsToGribConverter::GradsToGribConverter() {
-
-}
-
 void GradsToGribConverter::setConvertConfigFilePath(const string &convert_config_file_path)
 {
     convert_config_file_path_ = convert_config_file_path;
@@ -99,7 +95,7 @@ GradsParser::GradsCtl GradsToGribConverter::getGradsCtl() {
 
 void GradsToGribConverter::convertMessage(
         shared_ptr<GradsParser::GradsMessagedHandler> message_handler,
-        const ParamConfig &param_config,
+        ParamConfig &param_config,
         int message_count)
 {
     auto level = message_handler->variable().level_;
@@ -109,6 +105,11 @@ void GradsToGribConverter::convertMessage(
     std::vector<float> values = GradsUtil::rearrangeValueMatrix(
             message_values, message_handler->xDef().count_, message_handler->yDef().count_,
             message_handler->yDef().step_, message_handler->yDef().step_);
+    std::vector<double> double_values(values.begin(), values.end());
+    if(param_config.value_parser_){
+        param_config.calculateValues(double_values);
+    }
+
 
     string data_date = GradsUtil::formatDateTime(message_handler->startTime(), "%Y%m%d");
     int start_hour = message_handler->startTime().time_of_day().hours();
@@ -220,7 +221,6 @@ void GradsToGribConverter::convertMessage(
     codes_set_string(handle, "packingType", "grid_jpeg", &size);
 
     // section 7
-    std::vector<double> double_values(values.begin(), values.end());
 
     // TODO: use an expression to set variable calculation.
 //    if(message_handler->variable().name_ == "t")

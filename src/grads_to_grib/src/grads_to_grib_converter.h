@@ -16,7 +16,7 @@ namespace GradsToGrib {
     class GradsToGribConverter
     {
     public:
-        GradsToGribConverter();
+        GradsToGribConverter() = default;
 
         void setConvertConfigFilePath(const std::string &convert_config_file_path);
         void setCtlFilePath(const std::string &ctl_file_path);
@@ -28,7 +28,7 @@ namespace GradsToGrib {
         GradsParser::GradsCtl getGradsCtl();
 
         void convertMessage(std::shared_ptr<GradsParser::GradsMessagedHandler> message_handler,
-                            const ParamConfig &param_config, int message_count);
+                            ParamConfig &param_config, int message_count);
 
         std::string convert_config_file_path_;
         std::string ctl_file_path_;
