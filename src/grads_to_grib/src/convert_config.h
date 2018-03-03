@@ -6,7 +6,6 @@
 #include <memory>
 
 #include <yaml-cpp/yaml.h>
-#include <muParser.h>
 
 namespace GradsToGrib
 {
@@ -20,7 +19,6 @@ namespace GradsToGrib
     {
 
         bool isLevelSet() const;
-        void calculateValues(std::vector<double> &values);
 
         std::string name_;
 
@@ -30,7 +28,7 @@ namespace GradsToGrib
         std::map<std::string, long> number_keys_;
         std::map<std::string, std::string> string_keys_;
 
-        std::shared_ptr<mu::Parser> value_parser_;
+        std::string value_expr_;
     };
 
 

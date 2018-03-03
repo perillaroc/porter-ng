@@ -1,5 +1,4 @@
 #include "grads_to_grib_converter.h"
-#include "convert_config.h"
 
 #include <grads_ctl_parser.h>
 #include <grads_ctl_util.h>
@@ -7,6 +6,7 @@
 #include <grads_message_handler.h>
 
 #include <eccodes.h>
+#include <muParser.h>
 
 #include <iostream>
 
@@ -106,8 +106,8 @@ void GradsToGribConverter::convertMessage(
             message_values, message_handler->xDef().count_, message_handler->yDef().count_,
             message_handler->yDef().step_, message_handler->yDef().step_);
     std::vector<double> double_values(values.begin(), values.end());
-    if(param_config.value_parser_){
-        param_config.calculateValues(double_values);
+    if(!param_config.value_expr_.empty()){
+        applyValueExpression(param_config.value_expr_, double_values);
     }
 
 
@@ -222,13 +222,6 @@ void GradsToGribConverter::convertMessage(
 
     // section 7
 
-    // TODO: use an expression to set variable calculation.
-//    if(message_handler->variable().name_ == "t")
-//    {
-//        std::transform(begin(double_values), end(double_values), begin(double_values),
-//                       [](double t) -> double { return t + 273.15; });
-//    }
-
     double *value_array = &double_values[0];
     codes_set_double_array(handle, "values", value_array, values.size());
 
@@ -241,4 +234,18 @@ void GradsToGribConverter::convertMessage(
     codes_write_message(handle, output_file_path_.c_str(), output_file_mode);
 
     codes_handle_delete(handle);
+}
+
+void GradsToGribConverter::applyValueExpression(const std::string &value_expr, std::vector<double> &values) {
+    auto value_parser = mu::Parser();
+    value_parser.SetExpr(value_expr);
+    double value = 0.0;
+    value_parser.DefineVar("x", &value);
+    std::transform(values.begin(), values.end(), values.begin(),
+                   [&](double v){
+                       value = v;
+                       double result = value_parser.Eval();
+                       return result;
+                   });
+
 }

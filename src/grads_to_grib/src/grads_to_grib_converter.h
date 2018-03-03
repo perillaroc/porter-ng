@@ -30,6 +30,8 @@ namespace GradsToGrib {
         void convertMessage(std::shared_ptr<GradsParser::GradsMessagedHandler> message_handler,
                             ParamConfig &param_config, int message_count);
 
+        void applyValueExpression(const std::string &value_expr, std::vector<double> &values);
+
         std::string convert_config_file_path_;
         std::string ctl_file_path_;
         std::string output_file_path_;
