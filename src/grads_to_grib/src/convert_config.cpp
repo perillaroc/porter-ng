@@ -24,14 +24,6 @@ bool ParamConfig::isLevelSet() const
     return false;
 }
 
-double ParamConfig::calculateValue(double orig_value) {
-    value_parser_->DefineVar("x", &orig_value);
-    double result = value_parser_->Eval();
-    value_parser_->RemoveVar("x");
-    return result;
-}
-
-
 ConvertConfig::ConvertConfig()
 {
 

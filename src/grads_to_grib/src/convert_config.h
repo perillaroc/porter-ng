@@ -20,7 +20,12 @@ namespace GradsToGrib
     {
 
         bool isLevelSet() const;
-        double calculateValue(double orig_value);
+        template <typename T> T calculateValue(T orig_value) {
+            value_parser_->DefineVar("x", &orig_value);
+            T result = value_parser_->Eval();
+            value_parser_->RemoveVar("x");
+            return result;
+        }
 
         std::string name_;
 
