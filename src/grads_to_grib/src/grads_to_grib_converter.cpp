@@ -1,4 +1,5 @@
 #include "grads_to_grib_converter.h"
+#include "value_expression.h"
 
 #include <grads_ctl_parser.h>
 #include <grads_ctl_util.h>
@@ -107,7 +108,8 @@ void GradsToGribConverter::convertMessage(
             message_handler->yDef().step_, message_handler->yDef().step_);
     std::vector<double> double_values(values.begin(), values.end());
     if(!param_config.value_expr_.empty()){
-        applyValueExpression(param_config.value_expr_, double_values);
+        ValueExpression value_expression{param_config.value_expr_};
+        value_expression.applyToArray(double_values.begin(), double_values.end(), double_values.begin());
     }
 
 
@@ -234,18 +236,4 @@ void GradsToGribConverter::convertMessage(
     codes_write_message(handle, output_file_path_.c_str(), output_file_mode);
 
     codes_handle_delete(handle);
-}
-
-void GradsToGribConverter::applyValueExpression(const std::string &value_expr, std::vector<double> &values) {
-    auto value_parser = mu::Parser();
-    value_parser.SetExpr(value_expr);
-    double value = 0.0;
-    value_parser.DefineVar("x", &value);
-    std::transform(values.begin(), values.end(), values.begin(),
-                   [&](double v){
-                       value = v;
-                       double result = value_parser.Eval();
-                       return result;
-                   });
-
 }

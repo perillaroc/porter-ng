@@ -6,4 +6,9 @@ function(grads_to_grib_add_test TEST_NAME TEST_EXE TEST_SOURCE_FILES)
     add_test(${TEST_NAME} ${TEST_EXE})
 endfunction()
 
-grads_to_grib_add_test(ConvertConfigFileTest test_convert_config_file test_convert_config.cpp)
+set(TEST_SRCS
+        test_main.cpp
+        test_convert_config.cpp
+        test_value_expression.cpp)
+
+grads_to_grib_add_test(GradsToGribTest test_grads_to_grib "${TEST_SRCS}")
