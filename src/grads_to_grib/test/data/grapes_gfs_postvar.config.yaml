@@ -36,6 +36,7 @@ params:
       parameterNumber: 0
       # level
       typeOfLevel: isobaricInPa
+    value: x + 273.15
 
   -
     name: h

@@ -24,6 +24,13 @@ bool ParamConfig::isLevelSet() const
     return false;
 }
 
+double ParamConfig::calculateValue(double orig_value) {
+    value_parser_->DefineVar("x", &orig_value);
+    double result = value_parser_->Eval();
+    value_parser_->RemoveVar("x");
+    return result;
+}
+
 
 ConvertConfig::ConvertConfig()
 {
@@ -108,6 +115,16 @@ void ConvertConfig::parseParams(YAML::Node &params_node) {
                 param_config.keys_list_.emplace_back(make_pair(key_name, ConfigKeyType::String));
             }
         }
+
+        YAML::Node value_node = param_node["value"];
+        if(value_node)
+        {
+            string value_expr = value_node.as<string>();
+            auto value_parser = make_shared<mu::Parser>();
+            value_parser-> SetExpr(value_expr);
+            param_config.value_parser_ = value_parser;
+        }
+
         param_configs_.push_back(param_config);
     }
 }

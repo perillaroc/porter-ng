@@ -52,6 +52,16 @@ namespace {
 
         EXPECT_FALSE(v_config.isLevelSet());
 
+        ParamConfig t_config = param_configs[2];
+        EXPECT_EQ(t_config.name_, "t");
+        EXPECT_EQ(t_config.number_keys_.at("discipline"), 0);
+        EXPECT_EQ(t_config.number_keys_.at("parameterCategory"), 0);
+        EXPECT_EQ(t_config.number_keys_.at("parameterNumber"), 0);
+        EXPECT_EQ(t_config.string_keys_.at("typeOfLevel"), "isobaricInPa");
+        EXPECT_FALSE(t_config.isLevelSet());
+
+        EXPECT_DOUBLE_EQ(t_config.calculateValue(0.0), 0.0 + 273.15);
+
         ParamConfig tsoil_config = param_configs[4];
         EXPECT_EQ(tsoil_config.name_, "tsoil");
 
