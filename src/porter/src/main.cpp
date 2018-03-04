@@ -1,41 +1,37 @@
+#include <grads_to_grib_converter.h>
+
 #include <iostream>
 #include <boost/program_options.hpp>
-
-#include <grads_to_grib_converter.h>
+#include <cxxopts.hpp>
 
 using namespace std;
 using namespace GradsToGrib;
 
 namespace po = boost::program_options;
 
-int main(int argc, const char *argv[])
+int main(int argc, char *argv[])
 {
-    po::options_description desc{"Options"};
-    desc.add_options()
-            ("help,h", "Show this help")
-            ("config,c", po::value<string>(), "config file path")
-            ("output,o", po::value<string>(), "output file path")
-            ("ctl-file-path", po::value<vector<string>>(), "ctl file paths");
+    cxxopts::Options options("porter", "A data converter.");
+    options.positional_help("[ctl file path list]").show_positional_help();
 
-    po::positional_options_description pos_desc;
-    pos_desc.add("ctl-file-path", 1);
+    options.add_options()
+            ("h,help", "Print help")
+            ("c,config", "config file path", cxxopts::value<string>())
+            ("o,output", "output file path", cxxopts::value<string>())
+            ("ctl_file_path", "ctl file paths", cxxopts::value<vector<string>>());
 
-    po::command_line_parser parser{argc, argv};
-    parser.options(desc).positional(pos_desc).allow_unregistered();
-    po::parsed_options parsed_options = parser.run();
+    options.parse_positional({"ctl_file_path"});
 
-    po::variables_map vm;
-    po::store(parsed_options, vm);
-    po::notify(vm);
+    auto result = options.parse(argc, argv);
 
-    if(vm.count("help") ){
-        std::cout << desc << std::endl;
-        return 0;
+    if (result.count("help")){
+        std::cout << options.help({""}) << std::endl;
+        exit(0);
     }
 
-    string config_file_path{vm["config"].as<string>()};
-    string output_file_path{vm["output"].as<string>()};
-    vector<string> ctl_file_list{vm["ctl-file-path"].as<vector<string>>()};
+    string config_file_path{result["config"].as<string>()};
+    string output_file_path{result["output"].as<string>()};
+    vector<string> ctl_file_list{result["ctl_file_path"].as<vector<string>>()};
 
     for(auto &ctl_file_path: ctl_file_list)
     {
