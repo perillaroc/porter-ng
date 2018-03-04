@@ -26,6 +26,10 @@ produced by NWPC (Numerical Weather Prediction Center of CMA).
 
     porter-ng's config file is written in YAML. And yaml-cpp is used to parse YAML file.
 
+* [muParser](https://github.com/beltoforion/muparser)
+
+    porter-ng uses muParser to parse value expressions in config file.
+
 ## Installation
 
 Use CMake to build from source code.
@@ -34,6 +38,7 @@ Some Cmake variables are available to help find required libraries. Such as:
 
 * `ECCODES_INSTALL_PREFIX`: ecCodes's install prefix, default is `/usr/local`.
 * `YAMLCPP_INSTALL_PREFIX`: yaml-cpp's install prefix, default is `/usr/local`.
+* `MUPARSER_INSTALL_PREFIX`: muParser's install prefix, default is `/usr/local`.
 
 ## Getting Started
 
@@ -59,6 +64,7 @@ params:
 
       # level
       typeOfLevel: isobaricInPa
+    value: x + 273.15
 
   -
     name: u
