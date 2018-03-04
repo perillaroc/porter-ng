@@ -7,13 +7,13 @@
 #include <grads_message_handler.h>
 
 #include <eccodes.h>
-#include <muParser.h>
 
 #include <iostream>
 
 using namespace std;
 using namespace GradsToGrib;
 using namespace GradsParser;
+
 
 void GradsToGribConverter::setConvertConfigFilePath(const string &convert_config_file_path)
 {
@@ -37,21 +37,24 @@ void GradsToGribConverter::convert()
     auto grads_ctl = getGradsCtl();
     cout<<grads_ctl.start_time_<<endl;
     cout<<grads_ctl.forecast_time_<<endl;
+
+    auto converted_messages = getConvertedMessages(grads_ctl);
+    convertMessages(grads_ctl, converted_messages);
+}
+
+
+vector<ConvertedMessage> GradsToGribConverter::getConvertedMessages(GradsCtl &grads_ctl) {
+    vector<ConvertedMessage> converted_messages;
+
     auto &var_info_list = grads_ctl.var_infos_;
-
-    GradsDataHandler data_handler{grads_ctl};
-    data_handler.openDataFile();
-
-
     auto &param_configs = convert_config_.paramConfigs();
 
-    int message_count = 0;
     for(auto &var_info: var_info_list)
     {
         auto var_name = var_info.name_;
         auto level = var_info.level_;
         auto result = convert_config_.findParamConfig(var_name, &level);
-        if(result == std::end(param_configs))
+        if(result == end(param_configs))
         {
             cout<<"NOT FOUND: var "<<var_name<<" at level "<<level<<endl;
             continue;
@@ -61,18 +64,16 @@ void GradsToGribConverter::convert()
         cout<<"FOUND: var "<<var_name<<" at level "<<level<<endl;
 
         auto index = GradsUtil::findVariableIndex(grads_ctl, var_name, var_info.level_type_, level);
-
-        auto message_handler = data_handler.loadByIndex(index);
-
-        cout<<"Converting..."<<endl;
-        convertMessage(message_handler, param_config, message_count);
-        cout<<"Converting...Done"<<endl;
-        message_count++;
+        ConvertedMessage m;
+        m.index_ = index;
+        m.param_config_ = param_config;
+        converted_messages.push_back(m);
     }
 
+    return converted_messages;
 }
 
-GradsParser::GradsCtl GradsToGribConverter::getGradsCtl() {
+GradsCtl GradsToGribConverter::getGradsCtl() {
     GradsCtlParser parser;
     parser.parse(ctl_file_path_);
 
@@ -94,8 +95,25 @@ GradsParser::GradsCtl GradsToGribConverter::getGradsCtl() {
     return grads_ctl;
 }
 
+
+void GradsToGribConverter::convertMessages(GradsCtl &grads_ctl,
+                                           vector<ConvertedMessage> &converted_messages) {
+    GradsDataHandler data_handler{grads_ctl};
+    data_handler.openDataFile();
+
+    int message_count = 0;
+    for(auto &m: converted_messages) {
+        auto message_handler = data_handler.loadByIndex(m.index_);
+        cout<<"Converting..."<<endl;
+        convertMessage(message_handler, m.param_config_, message_count);
+        cout<<"Converting...Done"<<endl;
+        message_count++;
+    }
+}
+
+
 void GradsToGribConverter::convertMessage(
-        shared_ptr<GradsParser::GradsMessagedHandler> message_handler,
+        shared_ptr<GradsMessagedHandler> message_handler,
         ParamConfig &param_config,
         int message_count)
 {
