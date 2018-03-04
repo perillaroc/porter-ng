@@ -20,7 +20,6 @@ produced by NWPC (Numerical Weather Prediction Center of CMA).
     - system
     - file system
     - data time
-    - program options
 
 * [yaml-cpp](https://github.com/jbeder/yaml-cpp)
 
