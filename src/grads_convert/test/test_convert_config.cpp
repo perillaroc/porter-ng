@@ -3,7 +3,7 @@
 #include <convert_config.h>
 
 using namespace std;
-using namespace GradsToGrib;
+using namespace GradsConvert;
 
 namespace {
 
@@ -22,7 +22,7 @@ namespace {
 
     TEST_F(ConvertConfigTest, MethodParse)
     {
-        string config_file_path = "src/grads_to_grib/test/data/grapes_gfs_postvar.config.yaml";
+        string config_file_path = "src/grads_convert/test/data/grapes_gfs_postvar.config.yaml";
         ConvertConfig convert_config;
         convert_config.parse(config_file_path);
 
@@ -95,7 +95,7 @@ namespace {
 
     TEST_F(ConvertConfigTest, MethodFindParamConfig)
     {
-        string config_file_path = "src/grads_to_grib/test/data/grapes_gfs_postvar.config.yaml";
+        string config_file_path = "src/grads_convert/test/data/grapes_gfs_postvar.config.yaml";
         ConvertConfig convert_config;
         convert_config.parse(config_file_path);
 

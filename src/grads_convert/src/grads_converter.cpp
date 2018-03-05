@@ -1,4 +1,4 @@
-#include "grads_to_grib_converter.h"
+#include "grads_converter.h"
 #include "value_expression.h"
 
 #include <grads_ctl_parser.h>
@@ -11,26 +11,26 @@
 #include <iostream>
 
 using namespace std;
-using namespace GradsToGrib;
+using namespace GradsConvert;
 using namespace GradsParser;
 
 
-void GradsToGribConverter::setConvertConfigFilePath(const string &convert_config_file_path)
+void GradsConverter::setConfigFilePath(const string &convert_config_file_path)
 {
     convert_config_file_path_ = convert_config_file_path;
 }
 
-void GradsToGribConverter::setCtlFilePath(const string &ctl_file_path)
+void GradsConverter::setCtlFilePath(const string &ctl_file_path)
 {
     ctl_file_path_ = ctl_file_path;
 }
 
-void GradsToGribConverter::setOutputFilePath(const string &output_file_path)
+void GradsConverter::setOutputFilePath(const string &output_file_path)
 {
     output_file_path_ = output_file_path;
 }
 
-void GradsToGribConverter::convert()
+void GradsConverter::convert()
 {
     convert_config_.parse(convert_config_file_path_);
 
@@ -43,7 +43,7 @@ void GradsToGribConverter::convert()
 }
 
 
-vector<ConvertedMessage> GradsToGribConverter::getConvertedMessages(GradsCtl &grads_ctl) {
+vector<ConvertedMessage> GradsConverter::getConvertedMessages(GradsCtl &grads_ctl) {
     vector<ConvertedMessage> converted_messages;
 
     auto &var_info_list = grads_ctl.var_infos_;
@@ -73,7 +73,7 @@ vector<ConvertedMessage> GradsToGribConverter::getConvertedMessages(GradsCtl &gr
     return converted_messages;
 }
 
-GradsCtl GradsToGribConverter::getGradsCtl() {
+GradsCtl GradsConverter::getGradsCtl() {
     GradsCtlParser parser;
     parser.parse(ctl_file_path_);
 
@@ -96,8 +96,8 @@ GradsCtl GradsToGribConverter::getGradsCtl() {
 }
 
 
-void GradsToGribConverter::convertMessages(GradsCtl &grads_ctl,
-                                           vector<ConvertedMessage> &converted_messages) {
+void GradsConverter::convertMessages(GradsCtl &grads_ctl,
+                                     vector<ConvertedMessage> &converted_messages) {
     GradsDataHandler data_handler{grads_ctl};
     data_handler.openDataFile();
 
@@ -112,7 +112,7 @@ void GradsToGribConverter::convertMessages(GradsCtl &grads_ctl,
 }
 
 
-void GradsToGribConverter::convertMessage(
+void GradsConverter::convertMessage(
         shared_ptr<GradsMessagedHandler> message_handler,
         ParamConfig &param_config,
         int message_count)

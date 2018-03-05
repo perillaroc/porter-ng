@@ -1,4 +1,4 @@
-project(grads_to_grib)
+project(grads_convert)
 
 
 include_directories("${grads_parser_BINARY_DIR}/src")
@@ -18,11 +18,11 @@ include_directories(${ECCODES_INCLUDE_DIR})
 # lib
 set(SOURCE_FILES
         src/convert_config.cpp
-        src/grads_to_grib_converter.cpp
+        src/grads_converter.cpp
         src/value_expression.cpp
         )
-add_library(grads_to_grib STATIC ${SOURCE_FILES})
-target_link_libraries(grads_to_grib grads_parser ${YAMLCPP_LIBRARY} ${MUPARSER_LIBRARY})
+add_library(grads_convert STATIC ${SOURCE_FILES})
+target_link_libraries(grads_convert grads_parser ${YAMLCPP_LIBRARY} ${MUPARSER_LIBRARY})
 
 # testing
 if(ENABLE_TESTS)

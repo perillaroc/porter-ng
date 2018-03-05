@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <memory>
 
-
 #include <grads_ctl_parser.h>
 #include <grads_ctl_util.h>
 #include <grads_data_handler.h>

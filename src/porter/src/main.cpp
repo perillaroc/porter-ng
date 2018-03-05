@@ -1,11 +1,11 @@
-#include <grads_to_grib_converter.h>
+#include <grads_converter.h>
 
 #include <iostream>
 #include <boost/program_options.hpp>
 #include <cxxopts.hpp>
 
 using namespace std;
-using namespace GradsToGrib;
+using namespace GradsConvert;
 
 namespace po = boost::program_options;
 
@@ -35,8 +35,8 @@ int main(int argc, char *argv[])
 
     for(auto &ctl_file_path: ctl_file_list)
     {
-        GradsToGribConverter converter;
-        converter.setConvertConfigFilePath(config_file_path);
+        GradsConverter converter;
+        converter.setConfigFilePath(config_file_path);
         converter.setCtlFilePath(ctl_file_path);
         converter.setOutputFilePath(output_file_path);
 

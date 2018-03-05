@@ -2,7 +2,7 @@
 
 #include <value_expression.h>
 
-using namespace GradsToGrib;
+using namespace GradsConvert;
 
 namespace {
 

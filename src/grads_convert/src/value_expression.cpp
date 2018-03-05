@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-using namespace GradsToGrib;
+using namespace GradsConvert;
 
 ValueExpression::ValueExpression(const std::string &expr) {
     setExpression(expr);

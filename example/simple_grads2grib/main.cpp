@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include <grads_to_grib_converter.h>
+#include <grads_converter.h>
 
 using namespace std;
-using namespace GradsToGrib;
+using namespace GradsConvert;
 
 int main(int argc, char *argv[])
 {
@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
     string ctl_file_path{argv[2]};
     string output_file_path{argv[3]};
 
-    GradsToGribConverter converter;
-    converter.setConvertConfigFilePath(config_file_path);
+    GradsConverter converter;
+    converter.setConfigFilePath(config_file_path);
     converter.setCtlFilePath(ctl_file_path);
     converter.setOutputFilePath(output_file_path);
 
