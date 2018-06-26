@@ -4,17 +4,35 @@ if(YAMLCPP_INSTALL_PREFIX)
 endif()
 
 find_path(
-        YAMLCPP_INCLUDE_DIR yaml.h
-        HINTS /usr/include/yaml-cpp /usr/local/include/yaml-cpp ${YAMLCPP_INCLUDE_HINTS}/yaml-cpp
+        YAMLCPP_INCLUDE_DIR 
+		NAMES yaml-cpp/yaml.h
+        PATHS /usr/include /usr/local/include ${YAMLCPP_INSTALL_PREFIX}/include
         NO_DEFAULT_PATH
 )
 
+if(VS_CONFIGURATION_TYPE STREQUAL "Debug")
+	message("Debug")
+	set(YAML_LIBRARY_NAMES
+		yaml-cpp
+		libyaml-cppmdd
+	)
+else()
+	message("Not Debug ${VS_CONFIGURATION_TYPE}")
+	set(YAML_LIBRARY_NAMES
+		yaml-cpp
+		libyaml-cppmdd
+	)
+endif()
+
 find_library(
         YAMLCPP_LIBRARY
-        yaml-cpp
-        /usr/lib  /usr/local/lib ${YAMLCPP_LIBRARY_HINTS} ${YAMLCPP_LIBRARY_DIR}
+        NAMES ${YAML_LIBRARY_NAMES}
+        PATHS /usr/lib  /usr/local/lib ${YAMLCPP_INSTALL_PREFIX}/lib ${YAMLCPP_LIBRARY_DIR}
         NO_DEFAULT_PATH
 )
+
+message("YAMLCPP_INCLUDE_DIR ${YAMLCPP_INCLUDE_DIR}")
+message("YAMLCPP_LIBRARY ${YAMLCPP_LIBRARY}")
 
 if(YAMLCPP_INCLUDE_DIR AND YAMLCPP_LIBRARY)
     set(YAMLCPP_FOUND TRUE)

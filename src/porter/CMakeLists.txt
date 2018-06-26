@@ -1,17 +1,28 @@
 project(porter)
 
-# set(Boost_USE_STATIC_LIBS ON)
+set(SRC_LIST 
+	src/main.cpp
+)
 
-include_directories(${Boost_INCLUDE_DIRS})
-include_directories("${VENDOR_DIR}/cxxopts/include")
+add_executable(porter 
+	${SRC_LIST}
+)
 
-include_directories("${grads_parser_BINARY_DIR}/src")
-include_directories("${grads_parser_SOURCE_DIR}/src")
-include_directories("${grads_convert_SOURCE_DIR}/src")
+target_include_directories(porter PUBLIC
+	$<TARGET_PROPERTY:grads_convert,INTERFACE_INCLUDE_DIRECTORIES>
+	${VENDOR_DIR}/cxxopts/include
+	${grads_parser_BINARY_DIR}/src
+	${grads_parser_SOURCE_DIR}/src
+	${grads_convert_SOURCE_DIR}/src
+)
 
-set(SRC_LIST src/main.cpp)
-
-add_executable(porter ${SRC_LIST})
-target_link_libraries(porter grads_parser grads_convert ${ECCODES_LIBRARY})
+target_link_libraries(porter 
+	PUBLIC 
+		$<TARGET_LINKER_FILE:grads_convert>
+		$<TARGET_LINKER_FILE:grads_parser>
+		$<TARGET_PROPERTY:grads_convert,INTERFACE_LINK_LIBRARIES>
+		$<TARGET_PROPERTY:grads_parser,INTERFACE_LINK_LIBRARIES>
+		${ECCODES_LIBRARY}
+)
 
 install(TARGETS porter RUNTIME DESTINATION bin)

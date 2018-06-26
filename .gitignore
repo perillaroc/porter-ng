@@ -142,3 +142,6 @@ venv.bak/
 
 cmake-build-debug/
 Testing/
+
+.vs
+CMakeSettings.json

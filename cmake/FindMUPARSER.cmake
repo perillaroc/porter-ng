@@ -4,15 +4,17 @@ if(MUPARSER_INSTALL_PREFIX)
 endif()
 
 find_path(
-        MUPARSER_INCLUDE_DIR muParser.h
-        HINTS /usr/include /usr/local/include ${MUPARSER_INCLUDE_HINTS}
+        MUPARSER_INCLUDE_DIR
+		NAMES muParser.h
+        PATHS /usr/include /usr/local/include ${MUPARSER_INSTALL_PREFIX} ${MUPARSER_INCLUDE_DIR}
+		PATH_SUFFIXES include
         NO_DEFAULT_PATH
 )
 
 find_library(
         MUPARSER_LIBRARY
-        muparser
-        /usr/lib  /usr/local/lib ${MUPARSER_LIBRARY_HINTS} ${MUPARSER_LIBRARY_DIR}
+        NAMES muparser
+        PATHS /usr/lib  /usr/local/lib ${MUPARSER_LIBRARY_HINTS} ${MUPARSER_LIBRARY_DIR}
         NO_DEFAULT_PATH
 )
 

@@ -1,17 +1,5 @@
 project(grads_parser)
 
-# set(Boost_USE_STATIC_LIBS ON)
-
-find_package(Boost
-        REQUIRED
-        COMPONENTS
-            system
-            filesystem
-            date_time
-        )
-
-include_directories(${Boost_INCLUDE_DIRS})
-
 # test endian
 include(TestBigEndian)
 test_big_endian(IS_BIG_ENDIAN)
@@ -31,7 +19,6 @@ configure_file (
         "${PROJECT_SOURCE_DIR}/src/porter_config.h.in"
         "${PROJECT_BINARY_DIR}/src/porter_config.h"
 )
-include_directories("${PROJECT_BINARY_DIR}/src")
 
 # lib
 set(SOURCE_FILES
@@ -42,7 +29,17 @@ set(SOURCE_FILES
         src/grads_ctl_util.cpp
         )
 add_library(grads_parser STATIC ${SOURCE_FILES})
-target_link_libraries(grads_parser ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
+
+target_include_directories(grads_parser PUBLIC
+	${Boost_INCLUDE_DIRS}
+	${PROJECT_BINARY_DIR}/src
+)
+
+target_link_libraries(grads_parser INTERFACE
+	Boost::system
+	Boost::filesystem
+	Boost::date_time
+)
 
 # testing
 if(ENABLE_TESTS)

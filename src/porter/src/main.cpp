@@ -1,13 +1,10 @@
 #include <grads_converter.h>
 
 #include <iostream>
-#include <boost/program_options.hpp>
 #include <cxxopts.hpp>
 
 using namespace std;
 using namespace GradsConvert;
-
-namespace po = boost::program_options;
 
 int main(int argc, char *argv[])
 {
