@@ -6,6 +6,7 @@
 #include <grads_data_handler.h>
 #include <grads_message_handler.h>
 
+#define OPJ_STATIC
 #include <eccodes.h>
 
 #include <iostream>

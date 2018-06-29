@@ -21,9 +21,10 @@ add_library(grads_convert STATIC
 	${SOURCE_FILES})
 
 target_link_libraries(grads_convert 
-	INTERFACE
+	PUBLIC
 		${YAMLCPP_LIBRARY} 
 		${MUPARSER_LIBRARY}
+		${ECCODES_LIBRARIES}
 )
 
 target_include_directories(grads_convert PUBLIC

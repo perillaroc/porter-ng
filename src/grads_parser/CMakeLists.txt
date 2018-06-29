@@ -39,6 +39,7 @@ target_link_libraries(grads_parser INTERFACE
 	Boost::system
 	Boost::filesystem
 	Boost::date_time
+	${ECCODES_LIBRARIES}
 )
 
 # testing
