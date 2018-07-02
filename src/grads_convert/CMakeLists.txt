@@ -34,6 +34,10 @@ target_include_directories(grads_convert PUBLIC
 	${ECCODES_INCLUDE_DIR}
 )
 
+target_compile_definitions(grads_convert PRIVATE
+	MUPARSER_STATIC
+)
+
 # testing
 if(ENABLE_TESTS)
     enable_testing()

@@ -22,7 +22,13 @@ target_link_libraries(porter
 		$<TARGET_LINKER_FILE:grads_parser>
 		$<TARGET_PROPERTY:grads_convert,INTERFACE_LINK_LIBRARIES>
 		$<TARGET_PROPERTY:grads_parser,INTERFACE_LINK_LIBRARIES>
-		${ECCODES_LIBRARIES}
+		#${ECCODES_LIBRARIES}
+		#${MUPARSER_LIBRARY}
 )
+
+#target_compile_definitions(porter
+#	PUBLIC
+#		$<TARGET_PROPERTY:grads_convert,INTERFACE_COMPILE_DEFINITIONS>
+#)
 
 install(TARGETS porter RUNTIME DESTINATION bin)

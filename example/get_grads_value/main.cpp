@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     string var_name = "u";
     double level = 962.5;
     auto index = GradsUtil::findVariableIndex(grads_ctl, var_name, LevelType::Multi, level);
+	std::cout << "index=" << index << std::endl;
 
     return 0;
 }
