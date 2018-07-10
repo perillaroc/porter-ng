@@ -10,37 +10,31 @@ find_path(
         NO_DEFAULT_PATH
 )
 
-if(VS_CONFIGURATION_TYPE STREQUAL "Debug")
-	message("Debug")
-	set(YAML_LIBRARY_NAMES
-		yaml-cpp
-		libyaml-cppmdd
-	)
-else()
-	message("Not Debug ${VS_CONFIGURATION_TYPE}")
-	set(YAML_LIBRARY_NAMES
-		yaml-cpp
-		libyaml-cppmdd
-	)
-endif()
-
 find_library(
-        YAMLCPP_LIBRARY
-        NAMES ${YAML_LIBRARY_NAMES}
+        YAMLCPP_LIBRARY_DEBUG
+        NAMES yaml-cppd libyaml-cppmdd
         PATHS /usr/lib  /usr/local/lib ${YAMLCPP_INSTALL_PREFIX}/lib ${YAMLCPP_LIBRARY_DIR}
         NO_DEFAULT_PATH
 )
 
-message("YAMLCPP_INCLUDE_DIR ${YAMLCPP_INCLUDE_DIR}")
-message("YAMLCPP_LIBRARY ${YAMLCPP_LIBRARY}")
+find_library(
+        YAMLCPP_LIBRARY_RELEASE
+        NAMES yaml-cpp libyaml-cppmd
+        PATHS /usr/lib  /usr/local/lib ${YAMLCPP_INSTALL_PREFIX}/lib ${YAMLCPP_LIBRARY_DIR}
+        NO_DEFAULT_PATH
+)
 
-if(YAMLCPP_INCLUDE_DIR AND YAMLCPP_LIBRARY)
+#message("YAMLCPP_INCLUDE_DIR ${YAMLCPP_INCLUDE_DIR}")
+#message("YAMLCPP_LIBRARY_DEBUG ${YAMLCPP_LIBRARY_DEBUG}")
+
+if(YAMLCPP_INCLUDE_DIR AND (YAMLCPP_LIBRARY_DEBUG OR YAMLCPP_LIBRARY_RELEASE))
     set(YAMLCPP_FOUND TRUE)
 endif()
 
 if(YAMLCPP_FOUND)
     if(NOT YAMLCPP_FIND_QUIETLY)
-        message(STATUS "Found yaml-cpp: ${YAMLCPP_LIBRARY}")
+        message(STATUS "Found yaml-cpp debug: ${YAMLCPP_LIBRARY_DEBUG}")
+        message(STATUS "Found yaml-cpp release: ${YAMLCPP_LIBRARY_RELEASE}")
     endif()
 else()
     if(YAMLCPP_FIND_REQUIRED)

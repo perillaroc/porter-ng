@@ -20,9 +20,16 @@ set(SOURCE_FILES
 add_library(grads_convert STATIC 
 	${SOURCE_FILES})
 
+	
+get_target_property(configure_type 
+	grads_convert
+	VS_CONFIGURATION_TYPE)
+
+message("ConfigurationType=${configure_type}")
+
 target_link_libraries(grads_convert 
 	PUBLIC
-		${YAMLCPP_LIBRARY} 
+		#${YAMLCPP_LIBRARY} 
 		${MUPARSER_LIBRARY}
 		${ECCODES_LIBRARIES}
 )

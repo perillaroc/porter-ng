@@ -9,6 +9,8 @@ target_link_libraries(simple_grads2grib PUBLIC
 		$<TARGET_LINKER_FILE:grads_parser>
 		$<TARGET_PROPERTY:grads_convert,INTERFACE_LINK_LIBRARIES>
 		$<TARGET_PROPERTY:grads_parser,INTERFACE_LINK_LIBRARIES>
+		$<$<CONFIG:Debug>:${YAMLCPP_LIBRARY_DEBUG}>
+		$<$<CONFIG:Release>:${YAMLCPP_LIBRARY_RELEASE}>
 )
 
 target_include_directories(simple_grads2grib PUBLIC
