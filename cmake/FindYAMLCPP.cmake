@@ -1,43 +1,74 @@
-if(YAMLCPP_INSTALL_PREFIX)
-    set(YAMLCPP_INCLUDE_HINTS ${YAMLCPP_INSTALL_PREFIX}/include)
-    set(YAMLCPP_LIBRARY_HINTS ${YAMLCPP_INSTALL_PREFIX}/lib)
+if(YAMLCpp_INSTALL_PREFIX)
+    set(YAMLCpp_INCLUDE_HINTS ${YAMLCPP_INSTALL_PREFIX}/include)
+    set(YAMLCpp_LIBRARY_HINTS ${YAMLCPP_INSTALL_PREFIX}/lib)
 endif()
 
 find_path(
-        YAMLCPP_INCLUDE_DIR 
+        YAMLCpp_INCLUDE_DIR 
 		NAMES yaml-cpp/yaml.h
         PATHS /usr/include /usr/local/include ${YAMLCPP_INSTALL_PREFIX}/include
         NO_DEFAULT_PATH
 )
 
 find_library(
-        YAMLCPP_LIBRARY_DEBUG
+        YAMLCpp_LIBRARY_DEBUG
         NAMES yaml-cppd libyaml-cppmdd
-        PATHS /usr/lib  /usr/local/lib ${YAMLCPP_INSTALL_PREFIX}/lib ${YAMLCPP_LIBRARY_DIR}
+        PATHS /usr/lib  /usr/local/lib ${YAMLCPP_INSTALL_PREFIX}/lib ${YAMLCpp_LIBRARY_DIR}
         NO_DEFAULT_PATH
 )
 
 find_library(
-        YAMLCPP_LIBRARY_RELEASE
+        YAMLCpp_LIBRARY_RELEASE
         NAMES yaml-cpp libyaml-cppmd
-        PATHS /usr/lib  /usr/local/lib ${YAMLCPP_INSTALL_PREFIX}/lib ${YAMLCPP_LIBRARY_DIR}
+        PATHS /usr/lib  /usr/local/lib ${YAMLCPP_INSTALL_PREFIX}/lib ${YAMLCpp_LIBRARY_DIR}
         NO_DEFAULT_PATH
 )
 
-#message("YAMLCPP_INCLUDE_DIR ${YAMLCPP_INCLUDE_DIR}")
-#message("YAMLCPP_LIBRARY_DEBUG ${YAMLCPP_LIBRARY_DEBUG}")
+#message("YAMLCpp_INCLUDE_DIR ${YAMLCpp_INCLUDE_DIR}")
+#message("YAMLCpp_LIBRARY_DEBUG ${YAMLCpp_LIBRARY_DEBUG}")
 
-if(YAMLCPP_INCLUDE_DIR AND (YAMLCPP_LIBRARY_DEBUG OR YAMLCPP_LIBRARY_RELEASE))
-    set(YAMLCPP_FOUND TRUE)
-endif()
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(YAMLCpp
+	REQUIRED_VARS YAMLCpp_INCLUDE_DIR YAMLCpp_LIBRARY_DEBUG YAMLCpp_LIBRARY_RELEASE
+)
 
-if(YAMLCPP_FOUND)
-    if(NOT YAMLCPP_FIND_QUIETLY)
-        message(STATUS "Found yaml-cpp debug: ${YAMLCPP_LIBRARY_DEBUG}")
-        message(STATUS "Found yaml-cpp release: ${YAMLCPP_LIBRARY_RELEASE}")
+if(YAMLCpp_FOUND AND NOT TARGET YAMLCpp::YAMLCpp)
+	if(NOT YAMLCpp_FIND_QUIETLY)
+        message(STATUS "Found yaml-cpp debug: ${YAMLCpp_LIBRARY_DEBUG}")
+        message(STATUS "Found yaml-cpp release: ${YAMLCpp_LIBRARY_RELEASE}")
     endif()
+
+	add_library(YAMLCpp::YAMLCpp UNKNOWN IMPORTED)
+
+	if(YAMLCpp_LIBRARY_RELEASE)
+		set_property(TARGET YAMLCpp::YAMLCpp APPEND PROPERTY
+			IMPORTED_CONFIGURATIONS RELEASE
+		)
+		set_target_properties(YAMLCpp::YAMLCpp PROPERTIES
+			IMPORTED_LOCATION_RELEASE "${YAMLCpp_LIBRARY_RELEASE}"
+		)
+	endif()
+
+	if(YAMLCpp_LIBRARY_DEBUG)
+		set_property(TARGET YAMLCpp::YAMLCpp APPEND PROPERTY
+			IMPORTED_CONFIGURATIONS DEBUG
+		)
+		set_target_properties(YAMLCpp::YAMLCpp PROPERTIES
+			IMPORTED_LOCATION_DEBUG "${YAMLCpp_LIBRARY_DEBUG}"
+		)
+	endif()
+	
+	set_target_properties(YAMLCpp::YAMLCpp PROPERTIES
+		IMPORTED_LINK_INTERFACE_LANGUAGES "CXX"
+		INTERFACE_INCLUDE_DIRECTORIES "${YAMLCpp_INCLUDE_DIR}"
+	)
+	mark_as_advanced(
+		YAMLCpp_INCLUDE_DIR
+		YAMLCpp_LIBRARY_DEBUG
+		YAMLCpp_LIBRARY_RELEASE
+	)
 else()
-    if(YAMLCPP_FIND_REQUIRED)
+    if(YAMLCpp_FIND_REQUIRED)
         MESSAGE(FATAL_ERROR "Could not find yaml-cpp library")
     endif()
 endif()

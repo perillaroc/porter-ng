@@ -1,14 +1,14 @@
 project(grads_convert)
 
 
-include_directories("${grads_parser_BINARY_DIR}/src")
-include_directories("${grads_parser_SOURCE_DIR}/src")
+#include_directories("${grads_parser_BINARY_DIR}/src")
+#include_directories("${grads_parser_SOURCE_DIR}/src")
 
 # yaml-cpp library
 find_package(YAMLCPP REQUIRED)
 
 # muParser library
-find_package(MUPARSER REQUIRED)
+find_package(MuParser REQUIRED)
 
 # lib
 set(SOURCE_FILES
@@ -20,30 +20,28 @@ set(SOURCE_FILES
 add_library(grads_convert STATIC 
 	${SOURCE_FILES})
 
-	
-get_target_property(configure_type 
-	grads_convert
-	VS_CONFIGURATION_TYPE)
-
-message("ConfigurationType=${configure_type}")
-
 target_link_libraries(grads_convert 
 	PUBLIC
-		#${YAMLCPP_LIBRARY} 
-		${MUPARSER_LIBRARY}
+		YAMLCpp::YAMLCpp
+		MuParser::MuParser
 		${ECCODES_LIBRARIES}
+		Porter::grads_parser
 )
 
-target_include_directories(grads_convert PUBLIC
-	$<TARGET_PROPERTY:grads_parser,INTERFACE_INCLUDE_DIRECTORIES>
-	${YAMLCPP_INCLUDE_DIR}
-	${MUPARSER_INCLUDE_DIR}
-	${ECCODES_INCLUDE_DIR}
+target_include_directories(grads_convert 
+	PUBLIC
+		#$<TARGET_PROPERTY:grads_parser,INTERFACE_INCLUDE_DIRECTORIES>
+		#${YAMLCPP_INCLUDE_DIR}
+		${ECCODES_INCLUDE_DIR}
+	INTERFACE
+		${PROJECT_SOURCE_DIR}/src
 )
 
 target_compile_definitions(grads_convert PRIVATE
 	MUPARSER_STATIC
 )
+
+add_library(Porter::grads_convert ALIAS grads_convert)
 
 # testing
 if(ENABLE_TESTS)

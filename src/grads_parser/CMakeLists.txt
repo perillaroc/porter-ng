@@ -30,9 +30,13 @@ set(SOURCE_FILES
         )
 add_library(grads_parser STATIC ${SOURCE_FILES})
 
-target_include_directories(grads_parser PUBLIC
-	${Boost_INCLUDE_DIRS}
-	${PROJECT_BINARY_DIR}/src
+target_include_directories(grads_parser 
+	PUBLIC
+		${Boost_INCLUDE_DIRS}
+		${PROJECT_BINARY_DIR}/src
+	INTERFACE
+		${PROJECT_SOURCE_DIR}/src
+		${PROJECT_BINARY_DIR}/src
 )
 
 target_link_libraries(grads_parser INTERFACE
@@ -41,6 +45,8 @@ target_link_libraries(grads_parser INTERFACE
 	Boost::date_time
 	${ECCODES_LIBRARIES}
 )
+
+add_library(Porter::grads_parser ALIAS grads_parser)
 
 # testing
 if(ENABLE_TESTS)
