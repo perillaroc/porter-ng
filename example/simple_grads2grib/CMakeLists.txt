@@ -1,8 +1,6 @@
 project(example_simple_grads2grib)
 
-include_directories(${ECCODES_INCLUDE_DIR})
-
-find_package(MuParser REQUIRED)
+#find_package(MuParser REQUIRED)
 
 add_executable(simple_grads2grib main.cpp)
 

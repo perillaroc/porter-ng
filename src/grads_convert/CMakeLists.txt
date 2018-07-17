@@ -1,14 +1,13 @@
 project(grads_convert)
 
-
-#include_directories("${grads_parser_BINARY_DIR}/src")
-#include_directories("${grads_parser_SOURCE_DIR}/src")
-
 # yaml-cpp library
 find_package(YAMLCPP REQUIRED)
 
 # muParser library
 find_package(MuParser REQUIRED)
+
+# EcCodes library
+find_package(EcCodes REQUIRED)
 
 # lib
 set(SOURCE_FILES
@@ -24,7 +23,7 @@ target_link_libraries(grads_convert
 	PUBLIC
 		YAMLCpp::YAMLCpp
 		MuParser::MuParser
-		${ECCODES_LIBRARIES}
+		EcCodes::EcCodes
 		Porter::grads_parser
 )
 
@@ -32,7 +31,7 @@ target_include_directories(grads_convert
 	PUBLIC
 		#$<TARGET_PROPERTY:grads_parser,INTERFACE_INCLUDE_DIRECTORIES>
 		#${YAMLCPP_INCLUDE_DIR}
-		${ECCODES_INCLUDE_DIR}
+		#${ECCODES_INCLUDE_DIR}
 	INTERFACE
 		${PROJECT_SOURCE_DIR}/src
 )

@@ -4,8 +4,6 @@ set(SRC_LIST
 	src/main.cpp
 )
 
-find_package(MuParser REQUIRED)
-
 add_executable(porter 
 	${SRC_LIST}
 )
@@ -24,10 +22,5 @@ target_link_libraries(porter
 		#$<$<CONFIG:Debug>:${YAMLCPP_LIBRARY_DEBUG}>
 		#$<$<CONFIG:Release>:${YAMLCPP_LIBRARY_RELEASE}>
 )
-
-#target_compile_definitions(porter
-#	PUBLIC
-#		$<TARGET_PROPERTY:grads_convert,INTERFACE_COMPILE_DEFINITIONS>
-#)
 
 install(TARGETS porter RUNTIME DESTINATION bin)

@@ -18,9 +18,6 @@ find_library(
         NO_DEFAULT_PATH
 )
 
-#message("MuParser_INCLUDE_DIR ${MuParser_INCLUDE_DIR}")
-#message("MuParser_LIBRARY ${MuParser_LIBRARY}")
-
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MuParser
 	REQUIRED_VARS MuParser_INCLUDE_DIR MuParser_LIBRARY
@@ -38,11 +35,3 @@ if(MuParser_FOUND AND NOT TARGET MuParser::MuParser)
 		MuParser_LIBRARY
 	)
 endif()
-#    if(NOT MuParser_FIND_QUIETLY)
-#        message(STATUS "Found muParser: ${MuParser_LIBRARY}")
-#    endif()
-#else()
-#    if(MuParser_FIND_REQUIRED)
-#        MESSAGE(FATAL_ERROR "Could not find muParser library")
-#    endif()
-#endif()

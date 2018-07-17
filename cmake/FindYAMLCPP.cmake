@@ -24,9 +24,6 @@ find_library(
         NO_DEFAULT_PATH
 )
 
-#message("YAMLCpp_INCLUDE_DIR ${YAMLCpp_INCLUDE_DIR}")
-#message("YAMLCpp_LIBRARY_DEBUG ${YAMLCpp_LIBRARY_DEBUG}")
-
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(YAMLCpp
 	REQUIRED_VARS YAMLCpp_INCLUDE_DIR YAMLCpp_LIBRARY_DEBUG YAMLCpp_LIBRARY_RELEASE

@@ -43,7 +43,6 @@ target_link_libraries(grads_parser INTERFACE
 	Boost::system
 	Boost::filesystem
 	Boost::date_time
-	${ECCODES_LIBRARIES}
 )
 
 add_library(Porter::grads_parser ALIAS grads_parser)
