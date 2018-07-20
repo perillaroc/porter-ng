@@ -10,8 +10,11 @@ include_directories("${PROJECT_BINARY_DIR}/test")
 
 
 function(grads_parser_add_test TEST_NAME TEST_EXE TEST_SOURCE_FILES)
-    add_executable(${TEST_EXE} ${TEST_SOURCE_FILES} )
-    target_link_libraries(${TEST_EXE} grads_parser ${GTEST_BOTH_LIBRARIES} pthread)
+    add_executable(${TEST_EXE} ${TEST_SOURCE_FILES})
+    target_link_libraries(${TEST_EXE}
+            Porter::grads_parser
+            ${GTEST_BOTH_LIBRARIES}
+            pthread)
     add_test(${TEST_NAME} ${TEST_EXE})
 endfunction()
 

@@ -1,13 +1,10 @@
 project(grads_convert)
 
 # yaml-cpp library
-find_package(YAMLCPP REQUIRED)
+find_package(YAMLCpp REQUIRED)
 
 # muParser library
 find_package(MuParser REQUIRED)
-
-# EcCodes library
-find_package(EcCodes REQUIRED)
 
 # lib
 set(SOURCE_FILES

@@ -24,7 +24,7 @@ endif()
 find_path(
 	EcCodes_INCLUDE_DIR 
 	NAMES eccodes.h
-    PATHS ${ECCODES_INSTALL_PREFIX} ${EcCodes_INCLUDE_DIR} /usr/include /usr/local/include 
+    PATHS ${ECCODES_INSTALL_PREFIX} ${EcCodes_INCLUDE_DIR} /usr /usr/local
 	PATH_SUFFIXES include
     NO_DEFAULT_PATH
 )
@@ -42,7 +42,7 @@ else()
 	find_library(
         EcCodes_LIBRARY 
 		NAMES eccodes
-        PATHS ${ECCODES_INSTALL_PREFIX} ${EcCodes_LIBRARY_DIR}
+        PATHS ${ECCODES_INSTALL_PREFIX} ${EcCodes_LIBRARY_DIR} /usr /usr/local
 		PATH_SUFFIXES lib
         NO_DEFAULT_PATH
 	)
@@ -56,7 +56,7 @@ find_package_handle_standard_args(EcCodes
 	REQUIRED_VARS EcCodes_INCLUDE_DIR EcCodes_LIBRARY
 )
 
-if(NOT OPENJP_FOUND)
+if(USE_OPENJP AND NOT OPENJP_FOUND)
     if(EcCodes_FIND_REQUIRED)
         MESSAGE(FATAL_ERROR "Could not find openjpeg library")
     endif()

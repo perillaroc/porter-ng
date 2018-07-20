@@ -2,7 +2,10 @@ include_directories(../src)
 
 function(grads_convert_add_test TEST_NAME TEST_EXE TEST_SOURCE_FILES)
     add_executable(${TEST_EXE} ${TEST_SOURCE_FILES} )
-    target_link_libraries(${TEST_EXE} grads_convert ${GTEST_BOTH_LIBRARIES} pthread)
+    target_link_libraries(${TEST_EXE} PRIVATE
+            Porter::grads_convert
+            ${GTEST_BOTH_LIBRARIES}
+            pthread)
     add_test(${TEST_NAME} ${TEST_EXE})
 endfunction()
 
