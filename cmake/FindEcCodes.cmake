@@ -1,5 +1,6 @@
-
-option(USE_OPENJP "Using OpenJpeg" ON)
+if(MSVC)
+    option(USE_OPENJP "Using OpenJpeg" ON)
+endif()
 
 if(USE_OPENJP)
 	find_library(OPENJP_LIBRARY
@@ -39,17 +40,19 @@ if(WIN32 AND (NOT CYGWIN))
         NO_DEFAULT_PATH
 	)
 else()
+    find_package(eccodes REQUIRED CONFIG)
+
+    set(EcCodes_INCLUDE_DIR ${ECCODES_INCLUDE_DIRS})
+    set(EcCodes_LINK_LIBRARIES ${ECCODES_TPL_LIBRARIES})
+
 	find_library(
-        EcCodes_LIBRARY 
+        EcCodes_LIBRARY
 		NAMES eccodes
         PATHS ${ECCODES_INSTALL_PREFIX} ${EcCodes_LIBRARY_DIR} /usr /usr/local
 		PATH_SUFFIXES lib
         NO_DEFAULT_PATH
 	)
 endif()
-
-#message("EcCodes_INCLUDE_DIR ${EcCodes_INCLUDE_DIR}")
-#message("EcCodes_LIBRARY ${EcCodes_LIBRARY}")
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(EcCodes
@@ -63,13 +66,21 @@ if(USE_OPENJP AND NOT OPENJP_FOUND)
 endif()
 
 if(EcCodes_FOUND AND NOT TARGET EcCodes::EcCodes)
+
 	add_library(EcCodes::EcCodes UNKNOWN IMPORTED)
 	set_target_properties(EcCodes::EcCodes PROPERTIES
 		IMPORTED_LINK_INTERFACE_LANGUAGES "CXX"
 		IMPORTED_LOCATION "${EcCodes_LIBRARY}"
-		INTERFACE_LINK_LIBRARIES "${OPENJP_LIBRARY}"
-		INTERFACE_INCLUDE_DIRECTORIES "${EcCodes_INCLUDE_DIR}"		
-	)
+		INTERFACE_INCLUDE_DIRECTORIES "${EcCodes_INCLUDE_DIR}")
+
+    if(WIN32 AND (NOT CYGWIN))
+        set_target_properties(EcCodes::EcCodes PROPERTIES
+            INTERFACE_LINK_LIBRARIES "${OPENJP_LIBRARY}")
+    else()
+        set_target_properties(EcCodes::EcCodes PROPERTIES
+            INTERFACE_LINK_LIBRARIES "${EcCodes_LINK_LIBRARIES}")
+    endif()
+
 	mark_as_advanced(
 		EcCodes_INCLUDE_DIR
 		EcCodes_LIBRARY

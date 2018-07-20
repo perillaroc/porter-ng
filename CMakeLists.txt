@@ -5,11 +5,7 @@ project(porter_ng)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-if(WIN32 AND NOT CYGWIN)
-    find_package(EcCodes REQUIRED)
-else()
-    find_package(EcCodes REQUIRED CONFIG)
-endif()
+find_package(EcCodes REQUIRED)
 
 if(WIN32 AND NOT CYGWIN)
     set(Boost_USE_DEBUG_RUNTIME ON)
