@@ -50,7 +50,5 @@ add_library(Porter::grads_parser ALIAS grads_parser)
 # testing
 if(ENABLE_TESTS)
     enable_testing()
-    find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
     add_subdirectory(test)
 endif()

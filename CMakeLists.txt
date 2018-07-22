@@ -32,5 +32,9 @@ set(PORTER_TEST_DATA_DIR
 
 set(VENDOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 
+if(ENABLE_TESTS)
+    find_package(GTest REQUIRED)
+endif()
+
 add_subdirectory(src)
 add_subdirectory(example)
