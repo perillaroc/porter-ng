@@ -1,37 +1,33 @@
-if(MSVC)
-    option(USE_OPENJP "Using OpenJpeg" ON)
-endif()
-
-if(USE_OPENJP)
-	find_library(OPENJP_LIBRARY
-		NAMES openjp2
-		PATHS ${OPENJP_INSTALL_PREFIX}
-		PATH_SUFFIXES lib
-		NO_DEFAULT_PATH
-	)
-	if(OPENJP_LIBRARY)
-		set(OPENJP_FOUND TRUE)
-		message(STATUS "Found OpenJPEG: ${OPENJP_LIBRARY}")
-	endif()
-endif()
-
-
-if(ECCODES_INSTALL_PREFIX)
-    set(EcCodes_INCLUDE_HINTS ${ECCODES_INSTALL_PREFIX}/include)
-    set(EcCodes_LIBRARY_HINTS ${ECCODES_INSTALL_PREFIX}/lib)
-endif()
-
-
-find_path(
-	EcCodes_INCLUDE_DIR 
-	NAMES eccodes.h
-    PATHS ${ECCODES_INSTALL_PREFIX} ${EcCodes_INCLUDE_DIR} /usr /usr/local
-	PATH_SUFFIXES include
-    NO_DEFAULT_PATH
-)
-
-
 if(WIN32 AND (NOT CYGWIN))
+    option(USE_OPENJP "Using OpenJpeg" ON)
+
+    if(USE_OPENJP)
+        find_library(OPENJP_LIBRARY
+            NAMES openjp2
+            PATHS ${OPENJP_INSTALL_PREFIX}
+            PATH_SUFFIXES lib
+            NO_DEFAULT_PATH
+            )
+        if(OPENJP_LIBRARY)
+            set(OPENJP_FOUND TRUE)
+            message(STATUS "Found OpenJPEG: ${OPENJP_LIBRARY}")
+        endif()
+    endif()
+
+
+    if(ECCODES_INSTALL_PREFIX)
+        set(EcCodes_INCLUDE_HINTS ${ECCODES_INSTALL_PREFIX}/include)
+        set(EcCodes_LIBRARY_HINTS ${ECCODES_INSTALL_PREFIX}/lib)
+    endif()
+
+    find_path(
+        EcCodes_INCLUDE_DIR
+        NAMES eccodes.h
+        PATHS ${ECCODES_INSTALL_PREFIX} ${EcCodes_INCLUDE_DIR} /usr /usr/local
+        PATH_SUFFIXES include
+        NO_DEFAULT_PATH
+    )
+
 	find_file(
         EcCodes_LIBRARY
 		NAMES grib_api_lib.lib
@@ -41,6 +37,9 @@ if(WIN32 AND (NOT CYGWIN))
 	)
 else()
     find_package(eccodes REQUIRED CONFIG)
+#    message("ECCODES_INCLUDE_DIRS ${ECCODES_INCLUDE_DIRS}")
+#    message("ECCODES_TPL_LIBRARIES ${ECCODES_TPL_LIBRARIES}")
+#    message("ECCODES_SELF_INCLUDE_DIRS ${ECCODES_SELF_INCLUDE_DIRS}")
 
     set(EcCodes_INCLUDE_DIR ${ECCODES_INCLUDE_DIRS})
     set(EcCodes_LINK_LIBRARIES ${ECCODES_TPL_LIBRARIES})
@@ -48,7 +47,7 @@ else()
 	find_library(
         EcCodes_LIBRARY
 		NAMES eccodes
-        PATHS ${ECCODES_INSTALL_PREFIX} ${EcCodes_LIBRARY_DIR} /usr /usr/local
+        PATHS "${ECCODES_SELF_INCLUDE_DIRS}/.."
 		PATH_SUFFIXES lib
         NO_DEFAULT_PATH
 	)
