@@ -37,6 +37,13 @@ target_compile_definitions(grads_convert PRIVATE
 	MUPARSER_STATIC
 )
 
+if(ENABLE_PORTER_OPENMP)
+    message("GradsConvert in openmp")
+    target_link_libraries(grads_convert
+        PUBLIC
+        OpenMP::OpenMP_CXX)
+endif()
+
 add_library(Porter::grads_convert ALIAS grads_convert)
 
 # testing

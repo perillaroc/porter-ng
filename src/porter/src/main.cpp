@@ -37,7 +37,29 @@ int main(int argc, char *argv[])
         converter.setCtlFilePath(ctl_file_path);
         converter.setOutputFilePath(output_file_path);
 
+        {
+            auto t = std::time(nullptr);
+            auto tm = *std::localtime(&t);
+
+            std::ostringstream oss;
+            oss << std::put_time(&tm, "%Y-%m-%d %H-%M-%S");
+            auto str = oss.str();
+
+            std::cout << str << std::endl;
+        }
+
         converter.convert();
+
+        {
+            auto t = std::time(nullptr);
+            auto tm = *std::localtime(&t);
+
+            std::ostringstream oss;
+            oss << std::put_time(&tm, "%Y-%m-%d %H-%M-%S");
+            auto str = oss.str();
+
+            std::cout << str << std::endl;
+        }
     }
 
     return 0;

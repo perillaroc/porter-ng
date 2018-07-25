@@ -23,4 +23,11 @@ target_link_libraries(porter
 		#$<$<CONFIG:Release>:${YAMLCPP_LIBRARY_RELEASE}>
 )
 
+if(ENABLE_PORTER_OPENMP)
+    message("Porter in openmp: ${OpenMP_CXX_FLAGS}")
+    target_link_libraries(porter
+        PUBLIC
+            OpenMP::OpenMP_CXX)
+endif()
+
 install(TARGETS porter RUNTIME DESTINATION bin)

@@ -36,5 +36,11 @@ if(ENABLE_TESTS)
     find_package(GTest REQUIRED)
 endif()
 
+option(ENABLE_PORTER_OPENMP "Using OpenMP in Porter" OFF)
+
+if(ENABLE_PORTER_OPENMP)
+    find_package(OpenMP REQUIRED)
+endif()
+
 add_subdirectory(src)
 add_subdirectory(example)

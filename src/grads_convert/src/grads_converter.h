@@ -38,7 +38,7 @@ protected:
     void convertMessages(GradsParser::GradsCtl &grads_ctl, std::vector<ConvertedMessage> &converted_messages);
 
     void convertMessage(std::shared_ptr<GradsParser::GradsMessagedHandler> message_handler,
-                        ParamConfig &param_config, int message_count);
+                        ParamConfig &param_config, int &message_count);
 
     std::string convert_config_file_path_;
     std::string ctl_file_path_;

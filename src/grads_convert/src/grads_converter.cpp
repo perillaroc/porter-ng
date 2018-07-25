@@ -99,16 +99,24 @@ GradsCtl GradsConverter::getGradsCtl() {
 
 void GradsConverter::convertMessages(GradsCtl &grads_ctl,
                                      vector<ConvertedMessage> &converted_messages) {
-    GradsDataHandler data_handler{grads_ctl};
-    data_handler.openDataFile();
+//    GradsDataHandler data_handler{grads_ctl};
+//    data_handler.openDataFile();
 
     int message_count = 0;
-    for(auto &m: converted_messages) {
+#   pragma omp parallel for num_threads(4) \
+        shared(converted_messages, grads_ctl, message_count)
+    for(auto it = converted_messages.begin(); it < converted_messages.end(); it++) {
+
+//        message_count++;
+        auto m = *it;
+
+        GradsDataHandler data_handler{grads_ctl};
+        data_handler.openDataFile();
+
         auto message_handler = data_handler.loadByIndex(m.index_);
         cout<<"Converting..."<<endl;
         convertMessage(message_handler, m.param_config_, message_count);
         cout<<"Converting...Done"<<endl;
-        message_count++;
     }
 }
 
@@ -116,7 +124,7 @@ void GradsConverter::convertMessages(GradsCtl &grads_ctl,
 void GradsConverter::convertMessage(
         shared_ptr<GradsMessagedHandler> message_handler,
         ParamConfig &param_config,
-        int message_count)
+        int &message_count)
 {
     auto level = message_handler->variable().level_;
 
@@ -246,13 +254,18 @@ void GradsConverter::convertMessage(
     double *value_array = &double_values[0];
     codes_set_double_array(handle, "values", value_array, values.size());
 
-    const char* output_file_mode = "wb";
-    if(message_count > 0)
+#   pragma omp critical
     {
-        output_file_mode = "ab";
-    }
-
-    codes_write_message(handle, output_file_path_.c_str(), output_file_mode);
+        message_count++;
+        const char* output_file_mode = "wb";
+        if(message_count > 1)
+        {
+            output_file_mode = "ab";
+        }
+        std::cout<<"Writing message to file..."<<std::endl;
+        codes_write_message(handle, output_file_path_.c_str(), output_file_mode);
+        std::cout<<"Writing message to file...Done"<<std::endl;
+    };
 
     codes_handle_delete(handle);
 }
