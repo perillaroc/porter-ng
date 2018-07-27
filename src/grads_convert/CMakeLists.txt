@@ -26,9 +26,7 @@ target_link_libraries(grads_convert
 
 target_include_directories(grads_convert 
 	PUBLIC
-		#$<TARGET_PROPERTY:grads_parser,INTERFACE_INCLUDE_DIRECTORIES>
-		#${YAMLCPP_INCLUDE_DIR}
-		#${ECCODES_INCLUDE_DIR}
+		${porter_ng_BINARY_DIR}/src
 	INTERFACE
 		${PROJECT_SOURCE_DIR}/src
 )
@@ -37,11 +35,15 @@ target_compile_definitions(grads_convert PRIVATE
 	MUPARSER_STATIC
 )
 
-if(ENABLE_PORTER_OPENMP)
-    message("GradsConvert in openmp")
+if(USE_OPENMP)
     target_link_libraries(grads_convert
         PUBLIC
         OpenMP::OpenMP_CXX)
+endif()
+if(USE_THREAD)
+	target_link_libraries(grads_convert
+		PUBLIC
+			Threads::Threads)
 endif()
 
 add_library(Porter::grads_convert ALIAS grads_convert)

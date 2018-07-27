@@ -23,8 +23,7 @@ target_link_libraries(porter
 		#$<$<CONFIG:Release>:${YAMLCPP_LIBRARY_RELEASE}>
 )
 
-if(ENABLE_PORTER_OPENMP)
-    message("Porter in openmp: ${OpenMP_CXX_FLAGS}")
+if(USE_OPENMP)
     target_link_libraries(porter
         PUBLIC
             OpenMP::OpenMP_CXX)

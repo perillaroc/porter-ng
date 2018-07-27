@@ -21,25 +21,30 @@ find_package(Boost
             date_time
 )
 
-set(PORTER_INCLUDE_DIRS
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/grads_parser/src
-        ${CMAKE_CURRENT_BINARY_DIR}/src/grads_parser/src
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/grads_convert/src
-        )
-
 set(PORTER_TEST_DATA_DIR
         ${CMAKE_CURRENT_SOURCE_DIR}/data)
 
 set(VENDOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 
-if(ENABLE_TESTS)
-    find_package(GTest REQUIRED)
+option(USE_OPENMP "Using OpenMP in Porter" OFF)
+option(USE_THREAD "Using thread in Porter" OFF)
+
+if(USE_OPENMP)
+    set(PORTER_OPENMP ON)
+    find_package(OpenMP REQUIRED)
+endif()
+if(USE_THREAD)
+    set(PORTER_THREAD ON)
+    find_package(Threads REQUIRED)
 endif()
 
-option(ENABLE_PORTER_OPENMP "Using OpenMP in Porter" OFF)
+configure_file (
+    "${PROJECT_SOURCE_DIR}/src/porter_config.h.in"
+    "${PROJECT_BINARY_DIR}/src/porter_config.h"
+)
 
-if(ENABLE_PORTER_OPENMP)
-    find_package(OpenMP REQUIRED)
+if(ENABLE_TESTS)
+    find_package(GTest REQUIRED)
 endif()
 
 add_subdirectory(src)

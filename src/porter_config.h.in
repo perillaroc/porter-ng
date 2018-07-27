@@ -1,0 +1,4 @@
+#pragma once
+
+#cmakedefine PORTER_THREAD
+#cmakedefine PORTER_OPENMP

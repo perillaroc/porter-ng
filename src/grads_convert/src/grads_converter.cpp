@@ -16,6 +16,13 @@ using namespace GradsConvert;
 using namespace GradsParser;
 
 
+GradsConverter::GradsConverter() {
+#ifdef PORTER_THREAD
+    thread_pool_size_ = 4;
+#endif
+}
+
+
 void GradsConverter::setConfigFilePath(const string &convert_config_file_path)
 {
     convert_config_file_path_ = convert_config_file_path;
@@ -102,29 +109,44 @@ void GradsConverter::convertMessages(GradsCtl &grads_ctl,
 //    GradsDataHandler data_handler{grads_ctl};
 //    data_handler.openDataFile();
 
-    int message_count = 0;
-#   pragma omp parallel for num_threads(4) \
-        shared(converted_messages, grads_ctl, message_count)
-    for(auto it = converted_messages.begin(); it < converted_messages.end(); it++) {
+    int current_message_count = 0;
+#ifdef PORTER_OPENMP
+#   pragma omp parallel for \
+        shared(converted_messages, grads_ctl, current_message_count)
+#endif
+    for(auto message_index = 0; message_index < converted_messages.size(); message_index++) {
 
-//        message_count++;
-        auto m = *it;
+#ifdef PORTER_THREAD
+        thread_pool_.emplace_back([=, &grads_ctl, &current_message_count](){
+#endif
+            auto m = converted_messages[message_index];
+            GradsDataHandler data_handler{grads_ctl};
+            data_handler.openDataFile();
+            auto message_handler = data_handler.loadByIndex(m.index_);
 
-        GradsDataHandler data_handler{grads_ctl};
-        data_handler.openDataFile();
+            cout<<"Converting..."<<endl;
+            convertMessage(message_handler, m.param_config_, message_index, current_message_count);
+            cout<<"Converting...Done"<<endl;
+#ifdef PORTER_THREAD
+        });
 
-        auto message_handler = data_handler.loadByIndex(m.index_);
-        cout<<"Converting..."<<endl;
-        convertMessage(message_handler, m.param_config_, message_count);
-        cout<<"Converting...Done"<<endl;
+        if(thread_pool_.size() == thread_pool_size_ || message_index == converted_messages.size() - 1){
+            for(auto &a_thread: thread_pool_){
+                a_thread.join();
+            }
+            thread_pool_.clear();
+        }
+#endif
     }
+
 }
 
 
 void GradsConverter::convertMessage(
         shared_ptr<GradsMessagedHandler> message_handler,
         ParamConfig &param_config,
-        int &message_count)
+        int message_index,
+        int &current_message_count)
 {
     auto level = message_handler->variable().level_;
 
@@ -254,18 +276,32 @@ void GradsConverter::convertMessage(
     double *value_array = &double_values[0];
     codes_set_double_array(handle, "values", value_array, values.size());
 
+#ifdef PORTER_OPENMP
 #   pragma omp critical
+#endif
     {
-        message_count++;
-        const char* output_file_mode = "wb";
-        if(message_count > 1)
-        {
+#ifdef PORTER_THREAD
+        std::unique_lock<std::mutex> locker(message_write_mutex_);
+        message_write_cv_.wait(locker, [=]{
+            return true;
+            return current_message_count == message_index;
+        });
+#endif
+        const char *output_file_mode = "wb";
+        if (current_message_count > 0) {
             output_file_mode = "ab";
         }
-        std::cout<<"Writing message to file..."<<std::endl;
+        std::cout << "Writing message " << current_message_count << " to file..." << std::endl;
         codes_write_message(handle, output_file_path_.c_str(), output_file_mode);
-        std::cout<<"Writing message to file...Done"<<std::endl;
-    };
+        std::cout << "Writing message " << current_message_count << " to file...Done" << std::endl;
+
+        current_message_count++;
+
+#ifdef PORTER_THREAD
+        locker.unlock();
+        message_write_cv_.notify_one();
+#endif
+    }
 
     codes_handle_delete(handle);
 }
