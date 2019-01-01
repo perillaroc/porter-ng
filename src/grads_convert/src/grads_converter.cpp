@@ -18,7 +18,7 @@ using namespace GradsParser;
 
 GradsConverter::GradsConverter() {
 #ifdef PORTER_THREAD
-    thread_pool_size_ = 4;
+    thread_pool_size_ = 2;
 #endif
 }
 
@@ -124,13 +124,14 @@ void GradsConverter::convertMessages(GradsCtl &grads_ctl,
             data_handler.openDataFile();
             auto message_handler = data_handler.loadByIndex(m.index_);
 
-            cout<<"Converting..."<<endl;
+            cout<< "message " << message_index << ": converting..."<<endl;
             convertMessage(message_handler, m.param_config_, message_index, current_message_count);
-            cout<<"Converting...Done"<<endl;
+            cout<< "message " << message_index << ": converting...Done"<<endl;
 #ifdef PORTER_THREAD
         });
 
         if(thread_pool_.size() == thread_pool_size_ || message_index == converted_messages.size() - 1){
+            cout<<"Join all thread..."<<endl;
             for(auto &a_thread: thread_pool_){
                 a_thread.join();
             }
@@ -243,13 +244,13 @@ void GradsConverter::convertMessage(
             case ConfigKeyType::String:
                 string_key = param_config.string_keys_.find(key_name);
                 codes_get_size(handle, key_name.c_str(), &size);
-                cout<<key_name<<": "<<string_key->second<<endl;
+                cout<<"message " << message_index  << ": " << key_name<<": "<<string_key->second<<endl;
                 codes_set_string(handle, key_name.c_str(), string_key->second.c_str(), &size);
                 break;
 
             case ConfigKeyType::Long:
                 long_key = param_config.number_keys_.find(key_name);
-                cout<<key_name<<": "<<long_key->second<<endl;
+                cout<<"message " << message_index  << ": " << key_name<<": "<<long_key->second<<endl;
                 codes_set_long(handle, key_name.c_str(), long_key->second);
                 break;
         }
@@ -274,7 +275,9 @@ void GradsConverter::convertMessage(
     // section 7
 
     double *value_array = &double_values[0];
+    std::cout << "message " << message_index << ": setting array... " << std::endl;
     codes_set_double_array(handle, "values", value_array, values.size());
+    std::cout << "message " << message_index << ": setting array...Done" << std::endl;
 
 #ifdef PORTER_OPENMP
 #   pragma omp critical
@@ -282,24 +285,33 @@ void GradsConverter::convertMessage(
     {
 #ifdef PORTER_THREAD
         std::unique_lock<std::mutex> locker(message_write_mutex_);
-        message_write_cv_.wait(locker, [=]{
-            return true;
-            return current_message_count == message_index;
+        message_write_cv_.wait(locker, [&]{
+//            return true;
+            std::cout << "message " << message_index << ": check condition..." << std::endl;
+            if(current_message_count == message_index){
+                std::cout << "message " << message_index << ": check condition...True" << std::endl;
+                return true;
+            } else {
+                std::cout << "message " << message_index << ": check condition...False: "
+                    << current_message_count <<std::endl;
+                return false;
+            }
         });
 #endif
         const char *output_file_mode = "wb";
         if (current_message_count > 0) {
             output_file_mode = "ab";
         }
-        std::cout << "Writing message " << current_message_count << " to file..." << std::endl;
+        std::cout << "message " << message_index << ": writing message to file..." << std::endl;
         codes_write_message(handle, output_file_path_.c_str(), output_file_mode);
-        std::cout << "Writing message " << current_message_count << " to file...Done" << std::endl;
+        std::cout << "message " << message_index << ": writing message to file...Done" << std::endl;
 
         current_message_count++;
+        std::cout << "message " << message_index << ": ++current_message_count = " << current_message_count << std::endl;
 
 #ifdef PORTER_THREAD
         locker.unlock();
-        message_write_cv_.notify_one();
+        message_write_cv_.notify_all();
 #endif
     }
 

@@ -80,6 +80,6 @@ params:
 
 ## License
 
-Copyright &copy; 2018, Perilla Roc.
+Copyright &copy; 2018-2019, Perilla Roc.
 
 This project is licensed under [the MIT License](./LICENSE).
