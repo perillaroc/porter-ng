@@ -14,7 +14,7 @@ find_path(
 find_library(
         MuParser_LIBRARY
         NAMES muparser
-        PATHS /usr/lib  /usr/local/lib ${MuParser_LIBRARY_HINTS} ${MuParser_LIBRARY_DIR}
+        PATHS /usr/lib  /usr/local/lib /usr/lib/x86_64-linux-gnu ${MuParser_LIBRARY_HINTS} ${MuParser_LIBRARY_DIR}
         NO_DEFAULT_PATH
 )
 
