@@ -140,7 +140,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-cmake-build-debug/
+cmake-build-*
 Testing/
 
 .vs
