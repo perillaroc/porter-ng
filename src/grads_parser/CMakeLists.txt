@@ -16,30 +16,29 @@ endif()
 
 # configure file
 configure_file (
-        "${PROJECT_SOURCE_DIR}/src/porter_config.h.in"
-        "${PROJECT_BINARY_DIR}/src/porter_config.h"
+	"${PROJECT_SOURCE_DIR}/src/porter_config.h.in"
+	"${PROJECT_BINARY_DIR}/src/porter_config.h"
 )
 
-# lib
-set(SOURCE_FILES
-        src/grads_ctl.cpp
-        src/grads_ctl_parser.cpp
-        src/grads_data_handler.cpp
-        src/grads_message_handler.cpp
-        src/grads_ctl_util.cpp
-        )
-add_library(grads_parser STATIC ${SOURCE_FILES})
+add_library(grads_parser STATIC)
+
+target_sources(grads_parser
+	PRIVATE
+	src/grads_ctl.cpp
+    src/grads_ctl_parser.cpp
+    src/grads_data_handler.cpp
+    src/grads_message_handler.cpp
+    src/grads_ctl_util.cpp)
 
 target_include_directories(grads_parser 
 	PUBLIC
-		${Boost_INCLUDE_DIRS}
 		${PROJECT_BINARY_DIR}/src
 	INTERFACE
 		${PROJECT_SOURCE_DIR}/src
-		${PROJECT_BINARY_DIR}/src
 )
 
-target_link_libraries(grads_parser INTERFACE
+target_link_libraries(grads_parser 
+	PUBLIC
 	Boost::system
 	Boost::filesystem
 	Boost::date_time

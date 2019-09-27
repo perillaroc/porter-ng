@@ -49,23 +49,23 @@ find_package_handle_standard_args(EcCodes
 	REQUIRED_VARS EcCodes_INCLUDE_DIR EcCodes_LIBRARY
 )
 
-if(EcCodes_FOUND AND NOT TARGET EcCodes::EcCodes)
+if(EcCodes_FOUND AND NOT TARGET eccodes)
 
-	add_library(EcCodes::EcCodes UNKNOWN IMPORTED)
-	set_target_properties(EcCodes::EcCodes PROPERTIES
+	add_library(eccodes UNKNOWN IMPORTED)
+	set_target_properties(eccodes PROPERTIES
 		IMPORTED_LINK_INTERFACE_LANGUAGES "CXX"
 		IMPORTED_LOCATION "${EcCodes_LIBRARY}"
 		INTERFACE_INCLUDE_DIRECTORIES "${EcCodes_INCLUDE_DIR}")
 
 
     if(WIN32 AND (NOT CYGWIN))
-        set_target_properties(EcCodes::EcCodes PROPERTIES
+        set_target_properties(eccodes PROPERTIES
             INTERFACE_LINK_LIBRARIES "${OPENJP_LIBRARY}")
 
-		target_link_libraries(EcCodes::EcCodes INTERFACE openjp2)
+		target_link_libraries(eccodes INTERFACE openjp2)
 
     else()
-        set_target_properties(EcCodes::EcCodes PROPERTIES
+        set_target_properties(eccodes PROPERTIES
             INTERFACE_LINK_LIBRARIES "${EcCodes_LINK_LIBRARIES}")
     endif()
 

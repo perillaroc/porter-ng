@@ -1,14 +1,14 @@
 project(porter)
 
-set(SRC_LIST 
-	src/main.cpp
-)
+find_package(cxxopts CONFIG REQUIRED)
 
 add_executable(porter 
 	${SRC_LIST}
 )
 
-find_package(cxxopts CONFIG REQUIRED)
+target_sources(porter
+	PRIVATE
+	src/main.cpp)
 
 target_link_libraries(porter 
 	PRIVATE 
@@ -25,7 +25,7 @@ target_link_libraries(porter
 if(USE_OPENMP)
     target_link_libraries(porter
         PUBLIC
-            OpenMP::OpenMP_CXX)
+        OpenMP::OpenMP_CXX)
 endif()
 
 install(TARGETS porter RUNTIME DESTINATION bin)
