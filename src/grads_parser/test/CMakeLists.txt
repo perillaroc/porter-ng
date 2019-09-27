@@ -15,13 +15,12 @@ set(TEST_MAIN_SRCS
 add_executable(test_grads_parser_main ${TEST_MAIN_SRCS})
 
 target_include_directories(test_grads_parser_main PRIVATE
-    ${GTEST_INCLUDE_DIRS}
     ${PROJECT_BINARY_DIR}/test
     )
 
-target_link_libraries(test_grads_parser_main
+target_link_libraries(test_grads_parser_main PRIVATE
     Porter::grads_parser
-    ${GTEST_BOTH_LIBRARIES}
-    pthread)
+	GTest::gtest
+)
 
 add_test(GradsParserMainTest test_grads_parser_main)

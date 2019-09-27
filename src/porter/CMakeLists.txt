@@ -8,13 +8,12 @@ add_executable(porter
 	${SRC_LIST}
 )
 
-target_include_directories(porter PUBLIC
-	${VENDOR_DIR}/cxxopts/include
-)
+find_package(cxxopts CONFIG REQUIRED)
 
 target_link_libraries(porter 
-	PUBLIC 
+	PRIVATE 
 		Porter::grads_convert
+		cxxopts::cxxopts
 		#$<TARGET_LINKER_FILE:grads_convert>
 		#$<TARGET_LINKER_FILE:grads_parser>
 		#$<TARGET_PROPERTY:grads_convert,INTERFACE_LINK_LIBRARIES>

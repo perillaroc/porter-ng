@@ -1,33 +1,30 @@
-cmake_minimum_required(VERSION 3.10.0)
+cmake_minimum_required(VERSION 3.12)
 
 project(porter_ng)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-find_package(EcCodes REQUIRED)
+# if(WIN32 AND NOT CYGWIN)
+#     set(Boost_USE_DEBUG_RUNTIME ON)
+#     set(Boost_USE_STATIC_LIBS ON)
+#     set(Boost_USE_STATIC_RUNTIME OFF)
+# endif()
 
-if(WIN32 AND NOT CYGWIN)
-    set(Boost_USE_DEBUG_RUNTIME ON)
-    set(Boost_USE_STATIC_LIBS ON)
-    set(Boost_USE_STATIC_RUNTIME OFF)
-endif()
-
-find_package(Boost
-        REQUIRED
-        COMPONENTS
-            system
-            filesystem
-            date_time
+find_package(Boost REQUIRED
+	COMPONENTS
+    system
+    filesystem
+    date_time
 )
 
-set(PORTER_TEST_DATA_DIR
-        ${CMAKE_CURRENT_SOURCE_DIR}/data)
+find_package(EcCodes REQUIRED)
 
-set(VENDOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
+set(PORTER_TEST_DATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/data")
 
 option(USE_OPENMP "Using OpenMP in Porter" OFF)
 option(USE_THREAD "Using thread in Porter" OFF)
+option(ENABLE_TESTS "Enable tests" OFF)
 
 if(USE_OPENMP)
     set(PORTER_OPENMP ON)
@@ -44,7 +41,8 @@ configure_file (
 )
 
 if(ENABLE_TESTS)
-    find_package(GTest REQUIRED)
+	enable_testing()
+    find_package(GTest CONFIG REQUIRED)
 endif()
 
 add_subdirectory(src)

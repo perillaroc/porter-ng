@@ -8,14 +8,14 @@ find_path(
     NAMES muParser.h
     PATHS /usr/include /usr/local/include ${MUPARSER_INSTALL_PREFIX} ${MuParser_INCLUDE_DIR}
     PATH_SUFFIXES include
-    NO_DEFAULT_PATH
+    #NO_DEFAULT_PATH
 )
 
 find_library(
     MuParser_LIBRARY
     NAMES muparser
     PATHS /usr/lib  /usr/local/lib /usr/lib/x86_64-linux-gnu ${MuParser_LIBRARY_HINTS} ${MuParser_LIBRARY_DIR}
-    NO_DEFAULT_PATH
+    #NO_DEFAULT_PATH
 )
 
 include(FindPackageHandleStandardArgs)
